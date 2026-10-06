@@ -37,14 +37,47 @@ internal sealed class Transport
     {
         // HttpClient does not check an already-cancelled token before handing the request on.
         cancellationToken.ThrowIfCancellationRequested();
+        var policy = call.Retry;
         var start = _time.GetTimestamp();
-        var remaining = call.TotalTimeout - _time.GetElapsedTime(start);
-        var attemptLimit = remaining < call.AttemptTimeout ? remaining : call.AttemptTimeout;
-        var cutByBudget = remaining < call.AttemptTimeout;
-        ThrowIfDisposed();
+        TypeSafeException? lastError = null;
+        for (var retry = 0; ; retry++)
+        {
+            // The budget covers attempts and waits, so the attempt in flight is cut at it too (ADR-0005).
+            var remaining = call.TotalTimeout - _time.GetElapsedTime(start);
+            if (remaining <= TimeSpan.Zero)
+            {
+                throw lastError ?? new TypeSafeTimeoutException($"The call used up its total timeout of {Seconds(call.TotalTimeout)} s.", call.TotalTimeout, null);
+            }
 
-        var attempt = await AttemptAsync(method, path, body, call, 0, attemptLimit, cutByBudget, cancellationToken).ConfigureAwait(false);
-        return attempt.Response ?? throw attempt.Error!;
+            var cutByBudget = remaining < call.AttemptTimeout;
+            var attemptLimit = cutByBudget ? remaining : call.AttemptTimeout;
+            ThrowIfDisposed();
+
+            var attempt = await AttemptAsync(method, path, body, call, retry, attemptLimit, cutByBudget, cancellationToken).ConfigureAwait(false);
+            if (attempt.Response is { } response)
+            {
+                return response;
+            }
+
+            var error = attempt.Error!;
+            if (!attempt.Retryable || retry >= policy.MaxRetries)
+            {
+                throw error;
+            }
+
+            // A server hint over 60 s falls back to backoff, as in typesafe-sdk-js v0.6.0 src/retry.ts.
+            var delay = attempt.ServerDelayMs is { } serverDelay && serverDelay <= RetrySettings.MaxRetryAfter.TotalMilliseconds
+                ? TimeSpan.FromMilliseconds(serverDelay)
+                : RetryTiming.Backoff(retry, RetrySettings.InitialBackoff, RetrySettings.MaxBackoff, RetrySettings.Jitter, _jitter());
+            if (_time.GetElapsedTime(start) + delay >= call.TotalTimeout)
+            {
+                // The rest of the budget would be spent waiting, so fail now with the real error.
+                throw error;
+            }
+
+            await Timing.DelayAsync(_time, delay, cancellationToken).ConfigureAwait(false);
+            lastError = error;
+        }
     }
 
     private async Task<Attempt> AttemptAsync(
