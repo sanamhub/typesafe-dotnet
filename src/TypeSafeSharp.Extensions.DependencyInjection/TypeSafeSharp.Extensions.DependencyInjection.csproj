@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
+    <RootNamespace>TypeSafeSharp</RootNamespace>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">true</IsAotCompatible>
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+    <!-- Reflection-free binding, so AddTypeSafe(IConfiguration) stays trim and AOT safe (ADR-0009). -->
+    <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <IsPackable>true</IsPackable>
+    <PackageId>TypeSafeSharp.Extensions.DependencyInjection</PackageId>
+    <Description>IServiceCollection registration for TypeSafeSharp, the unofficial .NET client for TypeSafe AI's System One API. Named HttpClient, configuration binding, NativeAOT safe.</Description>
+    <PackageTags>typesafe;jev;system-one;dependency-injection;httpclientfactory</PackageTags>
+    <PackageProjectUrl>https://github.com/sanamhub/typesafe-dotnet</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="PACKAGE.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TypeSafeSharp\TypeSafeSharp.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+    <PackageReference Include="PolySharp" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" PrivateAssets="all" />
+    <AdditionalFiles Include="PublicAPI.Shipped.txt;PublicAPI.Unshipped.txt" />
+  </ItemGroup>
+
+</Project>

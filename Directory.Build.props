@@ -1,0 +1,55 @@
+<Project>
+
+  <!-- Shared settings for every project. Libraries and tests set TargetFrameworks themselves
+       (ADR-0001). See PLAN.md section 4.3. -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+
+    <!-- Org rule 4: lint errors block merge. Enforced by the compiler, not by review. -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest-all</AnalysisLevel>
+
+    <!-- Deterministic, source-linked builds. -->
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+
+    <!-- Audit transitive packages too, since that is where advisories hide. High and critical
+         fail restore; moderate and low stay warnings (org rule 6). NuGet.Config pins the audit
+         source. -->
+    <NuGetAudit>true</NuGetAudit>
+    <NuGetAuditMode>all</NuGetAuditMode>
+    <NuGetAuditLevel>moderate</NuGetAuditLevel>
+    <WarningsNotAsErrors>NU1901;NU1902</WarningsNotAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Version">
+    <!-- One version for both packages (ADR-0011). AssemblyVersion carries the major only, so a
+         binding redirect is needed once per major, not once per release (ADR-0013). -->
+    <Version>0.1.0</Version>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Repository">
+    <Product>TypeSafeSharp</Product>
+    <Company>TypeSafeSharp contributors</Company>
+    <Authors>TypeSafeSharp contributors</Authors>
+    <Copyright>Copyright (c) TypeSafeSharp contributors</Copyright>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/sanamhub/typesafe-dotnet</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Strong naming">
+    <!-- An identity, not a credential: committed on purpose and never regenerated, or every
+         .NET Framework consumer's binding breaks (ADR-0013). -->
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)TypeSafeSharp.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+</Project>

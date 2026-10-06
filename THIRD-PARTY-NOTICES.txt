@@ -1,0 +1,25 @@
+THIRD-PARTY NOTICES
+===================
+
+TypeSafeSharp is an independent, unofficial client. It contains no code copied from the
+projects below. Its retry, validation and error-handling rules are ported from their
+behaviour, and each ported rule cites its source file and version in a code comment.
+
+
+1. TypeSafe JavaScript SDK  (typesafe-ai/typesafe-sdk-js)
+---------------------------------------------------------
+Upstream:  https://github.com/typesafe-ai/typesafe-sdk-js
+Version:   0.6.0
+License:   MIT, Copyright (c) 2026 TypeSafe
+
+Full license text: https://github.com/typesafe-ai/typesafe-sdk-js/blob/main/LICENSE
+
+
+2. TypeSafe Python SDK  (typesafe-ai/typesafe-sdk-python)
+---------------------------------------------------------
+Upstream:  https://github.com/typesafe-ai/typesafe-sdk-python
+Version:   0.7.2
+License:   MIT, per pyproject.toml. The repository's LICENSE file has an unfilled
+           copyright line, so no holder is named here.
+
+Full license text: https://github.com/typesafe-ai/typesafe-sdk-python/blob/main/LICENSE

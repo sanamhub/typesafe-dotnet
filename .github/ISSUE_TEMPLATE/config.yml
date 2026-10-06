@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/sanamhub/typesafe-dotnet/security/advisories/new
+    about: Report privately. Do not open a public issue.
+  - name: Leaked API key
+    url: https://console.typesafe.ai/keys
+    about: Revoke it there now. This project cannot revoke keys.
+  - name: TypeSafe API documentation
+    url: https://docs.typesafe.ai
+    about: Problems with the service itself, its answers or your account go to TypeSafe.

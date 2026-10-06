@@ -1,0 +1,33 @@
+version: 2
+updates:
+  # Grouped so a .NET servicing release is one PR, not twelve. The cooldown gives a bad release
+  # a week to be pulled before it reaches this repository.
+  - package-ecosystem: nuget
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      microsoft-extensions:
+        patterns: ["Microsoft.Extensions.*", "Microsoft.Bcl.*"]
+      system:
+        patterns: ["System.*"]
+      test:
+        patterns: ["xunit.*", "Microsoft.Testing.*"]
+
+  # The SDK version in global.json.
+  - package-ecosystem: dotnet-sdk
+    directory: /
+    schedule:
+      interval: weekly
+
+  # Keeps the pinned action SHAs current.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7

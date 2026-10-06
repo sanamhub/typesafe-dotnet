@@ -1,0 +1,19 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+artifacts/
+*.user
+*.suo
+.vs/
+.vscode/
+.idea/
+
+# Test and coverage output
+TestResults/
+coverage*.xml
+coverage*.json
+*.coverage
+
+# Never commit an API key. The live tests read TYPESAFE_API_KEY from the environment.
+.env
+*.env

@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
+    <RootNamespace>TypeSafeSharp</RootNamespace>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">true</IsAotCompatible>
+    <!-- Supplies [UnsupportedOSPlatform] and the trim attributes on ns2.0 (ADR-0001). -->
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <IsPackable>true</IsPackable>
+    <PackageId>TypeSafeSharp</PackageId>
+    <Description>Unofficial .NET client for TypeSafe AI's System One API and the Jev model. Typed Noul, Choice and Score questions, retries matching the official SDKs, netstandard2.0 and NativeAOT.</Description>
+    <PackageTags>typesafe;jev;system-one;ai;llm;classification;decision;guardrails</PackageTags>
+    <PackageProjectUrl>https://github.com/sanamhub/typesafe-dotnet</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Without it pack fails with NU5039. -->
+    <None Include="PACKAGE.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="PolySharp" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" PrivateAssets="all" />
+    <AdditionalFiles Include="PublicAPI.Shipped.txt;PublicAPI.Unshipped.txt" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Text.Json" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" />
+    <PackageReference Include="Microsoft.Bcl.TimeProvider" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
+  </ItemGroup>
+
+</Project>

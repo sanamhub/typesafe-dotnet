@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- net481 runs the netstandard2.0 build; Linux and macOS pass -f net10.0. -->
+    <TargetFrameworks>net10.0;net481</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- TimeProvider.Testing 10.x warns that net481 is untested. FakeTimeProvider is plain managed
+         code over Microsoft.Bcl.TimeProvider, which does support net462, and this leg exists to
+         run the netstandard2.0 build on .NET Framework, so the warning is accepted here only. -->
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\TypeSafeSharp\TypeSafeSharp.csproj" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+    <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" PrivateAssets="all" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
+</Project>

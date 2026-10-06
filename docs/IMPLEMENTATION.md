@@ -246,6 +246,16 @@ tests/TypeSafeSharp.Extensions.DependencyInjection.Tests/(same)
 **Traps.** Microsoft.Testing.Platform exits with code 8 when no test ran; the smoke test avoids
 that. Do not copy ada-csharp's `CA2000 = none` or its transitive pinning.
 
+Found while building T01 (2026-10-06):
+- xunit.v3 adds no global `using Xunit`; the test projects carry `<Using Include="Xunit" />`.
+- `Microsoft.Extensions.TimeProvider.Testing` 10.10.0 warns that `net481` is untested, which
+  breaks the zero-warning gate. The test projects set `SuppressTfmSupportBuildWarnings`, with the
+  reason in a comment. Never set it in `src`.
+- `ImplicitUsings` is off in `src`, so every file lists its usings, as the appendix code does.
+- `.gitattributes` adds `*.snk binary`, or `eol=lf` could corrupt the key on checkout.
+- On a machine short of memory, MSBuild can fail with `OutOfMemoryException` or `Could not load
+  ICU data`. Run `dotnet build-server shutdown` and build with `-m:1`.
+
 ## T02 CI workflow
 
 **Goal.** Every PR builds and tests on both operating systems, so later tasks are checked

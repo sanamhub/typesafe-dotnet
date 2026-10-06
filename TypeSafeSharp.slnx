@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TypeSafeSharp/TypeSafeSharp.csproj" />
+    <Project Path="src/TypeSafeSharp.Extensions.DependencyInjection/TypeSafeSharp.Extensions.DependencyInjection.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TypeSafeSharp.Tests/TypeSafeSharp.Tests.csproj" />
+    <Project Path="tests/TypeSafeSharp.Extensions.DependencyInjection.Tests/TypeSafeSharp.Extensions.DependencyInjection.Tests.csproj" />
+  </Folder>
+</Solution>
