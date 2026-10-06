@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace TypeSafeSharp;
 
@@ -27,9 +28,12 @@ internal sealed class Transport
         Settings = settings;
         _time = time;
         _jitter = jitter;
+        Logger = settings.LoggerFactory.CreateLogger(Log.Category);
     }
 
     public ClientSettings Settings { get; }
+
+    public ILogger Logger { get; }
 
     public void MarkDisposed() => _disposed = true;
 
@@ -53,6 +57,7 @@ internal sealed class Transport
             var attemptLimit = cutByBudget ? remaining : call.AttemptTimeout;
             ThrowIfDisposed();
 
+            Log.AttemptStarted(Logger, call.Endpoint, retry + 1);
             var attempt = await AttemptAsync(method, path, body, call, retry, attemptLimit, cutByBudget, cancellationToken).ConfigureAwait(false);
             if (attempt.Response is { } response)
             {
@@ -62,6 +67,7 @@ internal sealed class Transport
             var error = attempt.Error!;
             if (!attempt.Retryable || retry >= policy.MaxRetries)
             {
+                Log.CallFailed(Logger, call.Endpoint, retry + 1, attempt.Reason, (error as TypeSafeApiException)?.RequestId);
                 throw error;
             }
 
@@ -72,9 +78,11 @@ internal sealed class Transport
             if (_time.GetElapsedTime(start) + delay >= call.TotalTimeout)
             {
                 // The rest of the budget would be spent waiting, so fail now with the real error.
+                Log.CallFailed(Logger, call.Endpoint, retry + 1, attempt.Reason, (error as TypeSafeApiException)?.RequestId);
                 throw error;
             }
 
+            Log.Retrying(Logger, call.Endpoint, attempt.Reason, retry + 1, policy.MaxRetries, (long)delay.TotalMilliseconds);
             await Timing.DelayAsync(_time, delay, cancellationToken).ConfigureAwait(false);
             lastError = error;
         }
@@ -90,6 +98,7 @@ internal sealed class Transport
         bool cutByBudget,
         CancellationToken cancellationToken)
     {
+        var attemptStart = _time.GetTimestamp();
         using var attemptCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         HttpResponseMessage? response = null;
         byte[]? responseBody = null;
@@ -145,6 +154,11 @@ internal sealed class Transport
             var status = (int)response.StatusCode;
             var requestId = response.Headers.TryGetValues(RequestIdHeader, out var ids) ? ids.FirstOrDefault() : null;
             var headers = CopyHeaders(response);
+            if (Logger.IsEnabled(LogLevel.Information))
+            {
+                var elapsedMs = (long)_time.GetElapsedTime(attemptStart).TotalMilliseconds;
+                Log.AttemptCompleted(Logger, call.Endpoint, status, elapsedMs, requestId);
+            }
             if (status is >= 200 and <= 299)
             {
                 return Attempt.Succeeded(new RawResponse(status, responseBody, requestId, headers));

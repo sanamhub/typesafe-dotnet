@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
@@ -21,6 +22,9 @@ public class TypeSafeClient : IDisposable
     private readonly HttpClient? _httpClient;
     private readonly bool _ownsHttpClient;
     private readonly ModelsClient? _models;
+
+    // Unknown answer kinds already logged, so a new kind warns once per client, not once per call.
+    private readonly ConcurrentDictionary<string, bool> _reportedKinds = new(StringComparer.Ordinal);
 
     /// <summary>For mocking frameworks only. Every member of an instance made this way throws until a subclass overrides it.</summary>
     protected TypeSafeClient() { }
@@ -133,9 +137,21 @@ public class TypeSafeClient : IDisposable
         var transport = _transport ?? throw MockOnly();
         Guard.NotNull(request);
         var call = CallSettings.Resolve(transport.Settings, options, SystemOneEndpoint, request.Model ?? transport.Settings.DefaultModel);
-        var body = RequestWriter.Write(request, call.Model!);
-        var response = await transport.SendAsync(HttpMethod.Post, SystemOnePath, body, call, cancellationToken).ConfigureAwait(false);
-        return ResponseReader.ReadSystemOne(response.Body, response.RequestId);
+        using var activity = Telemetry.StartSystemOne(call.Model!, transport.Settings.BaseUrl);
+        try
+        {
+            var body = RequestWriter.Write(request, call.Model!);
+            var raw = await transport.SendAsync(HttpMethod.Post, SystemOnePath, body, call, cancellationToken).ConfigureAwait(false);
+            var response = ResponseReader.ReadSystemOne(raw.Body, raw.RequestId);
+            ReportUnknownKinds(transport, response);
+            Telemetry.Succeeded(activity, response, raw.StatusCode);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            Telemetry.Failed(activity, ex);
+            throw;
+        }
     }
 
     /// <summary>Stops the client. Calls in flight and later calls throw <see cref="ObjectDisposedException"/>. Disposes the <see cref="HttpClient"/> only if this client created it.</summary>
@@ -168,6 +184,17 @@ public class TypeSafeClient : IDisposable
         if (_ownsHttpClient)
         {
             _httpClient?.Dispose();
+        }
+    }
+
+    private void ReportUnknownKinds(Transport transport, SystemOneResponse response)
+    {
+        foreach (var pair in response.Answers)
+        {
+            if (pair.Value is UnknownAnswer unknown && _reportedKinds.TryAdd(unknown.Type, true))
+            {
+                Log.UnknownAnswerKind(transport.Logger, unknown.Type, pair.Key);
+            }
         }
     }
 
