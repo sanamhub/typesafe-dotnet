@@ -1,0 +1,74 @@
+name: live
+
+# Never pull_request or pull_request_target: no run started from a pull request, a fork's
+# included, may reach the live key (ADR-0012).
+on:
+  schedule:
+    - cron: '0 3 * * *'   # nightly: openapi-drift only
+    - cron: '0 4 * * 1'   # Mondays: openapi-drift and live-tests
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 'true'
+  CI: 'true'
+
+jobs:
+  openapi-drift:
+    # No environment and no secret: the OpenAPI document is public. A difference fails the run,
+    # GitHub mails the owner, and updating the snapshot is a reviewed PR (ADR-0012 decision 6).
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: compare the live OpenAPI document with the snapshot
+        shell: bash
+        run: |
+          curl -fsSL https://api.typesafe.ai/openapi.json | python3 -m json.tool --sort-keys > openapi.live.json
+          if ! diff -u tests/contract/openapi.snapshot.json openapi.live.json > openapi.diff; then
+            {
+              echo "### The TypeSafe API changed"
+              echo
+              echo '```diff'
+              cat openapi.diff
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error::api.typesafe.ai/openapi.json differs from tests/contract/openapi.snapshot.json. See the job summary."
+            exit 1
+          fi
+
+  live-tests:
+    # Mondays and manual runs only. Environment live deploys from main only, so a dispatch from
+    # any other branch is refused before this job can read the secret.
+    if: github.event.schedule == '0 4 * * 1' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    environment: live
+    timeout-minutes: 10
+    concurrency:
+      group: live
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+      - name: build
+        run: dotnet build tests/TypeSafeSharp.Tests -c Release -f net10.0
+
+      # The key reaches this step only, as an environment variable. Never echo it, never pass it
+      # on a command line, never add a step that prints the environment.
+      - name: live tests
+        env:
+          TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
+        run: >
+          dotnet test --project tests/TypeSafeSharp.Tests -c Release --no-build -f net10.0
+          --filter-trait "Category=Live"
+          --minimum-expected-tests 8

@@ -1188,6 +1188,11 @@ changes from a weekly live run with a CI key that no pull request can read.
 - [ ] The live tests build, and the CI filter excludes them (the test count in the CI log does
       not include them).
 
+Found while building T16 (2026-10-06): the live filter runs 8 tests, far below the test
+project's `--minimum-expected-tests`, so `live.yml` passes `--minimum-expected-tests 8` on the
+command line, which overrides the csproj value. Normalise the snapshot on Linux (`python3 -m
+json.tool --sort-keys`), as the job does, or line endings make every line differ.
+
 ## T17 Release pipeline
 
 **Goal.** `release.yml` as PLAN.md section 6.2, able to run as a dry run.
