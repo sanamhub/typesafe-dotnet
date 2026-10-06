@@ -21,7 +21,7 @@ targets with the analyzer settings of section 4.3 and run on `net10.0` and `net4
 | Support matrix | `netstandard2.0` supports .NET Framework 4.7.2 and later (tested on 4.8.1); 4.6.2 may work but is unsupported (its support ends 2027-01-12); .NET 8 and 9 until their end of support on 2026-11-10 |
 | Distribution | Public on nuget.org, MIT, strong-named (ADR-0013), trusted publishing (ADR-0011) |
 | Conventions | From `sanamhub/ada-csharp`: layout, `Directory.Build.props`, CI, release, ADR format, writing style |
-| Standards | ADRs in `/docs/adr`, immutable once accepted. OWASP ASVS for secret handling. 80% line coverage target. SemVer with a changelog. Green CI to merge; the single-maintainer review exception is in `CLAUDE.md` (approver pending). |
+| Standards | ADRs in `/docs/adr`, immutable once accepted. OWASP ASVS for secret handling. 80% line coverage target. SemVer with a changelog. Green CI to merge; the single-maintainer review exception is in `CLAUDE.md` (approved by Sanam). |
 
 ---
 
