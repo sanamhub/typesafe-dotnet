@@ -1,0 +1,20 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "is_urgent": {
+      "type": "noul",
+      "noul": 0.95
+    },
+    "rank": {
+      "type": "ranking",
+      "order": [
+        "a",
+        "b"
+      ]
+    }
+  },
+  "usage": {
+    "input_tokens": 296,
+    "output_tokens": 20
+  }
+}

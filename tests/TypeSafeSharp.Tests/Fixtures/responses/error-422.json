@@ -1,0 +1,19 @@
+{
+  "detail": [
+    {
+      "loc": [
+        "body",
+        "questions",
+        "urgency",
+        "score",
+        "criteria"
+      ],
+      "msg": "List should have at least 1 item",
+      "type": "too_short",
+      "input": "MARKER_STATE_TEXT",
+      "ctx": {
+        "min_length": 1
+      }
+    }
+  ]
+}

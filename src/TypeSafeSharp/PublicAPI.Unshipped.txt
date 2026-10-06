@@ -1,21 +1,50 @@
 #nullable enable
+abstract TypeSafeSharp.Answer.Type.get -> string!
 abstract TypeSafeSharp.Question.Type.get -> string!
+override TypeSafeSharp.ChoiceAnswer.Type.get -> string!
 override TypeSafeSharp.ChoiceQuestion.Type.get -> string!
+override TypeSafeSharp.NoulAnswer.Type.get -> string!
 override TypeSafeSharp.NoulQuestion.Type.get -> string!
+override TypeSafeSharp.ScoreAnswer.Type.get -> string!
 override TypeSafeSharp.ScoreQuestion.Type.get -> string!
+override TypeSafeSharp.UnknownAnswer.Type.get -> string!
 static TypeSafeSharp.Question.Choice(System.Text.Json.Nodes.JsonNode? instructions, params string![]! options) -> TypeSafeSharp.ChoiceQuestion!
 static TypeSafeSharp.Question.Choice(System.Text.Json.Nodes.JsonNode? instructions, System.Collections.Generic.IReadOnlyDictionary<string!, System.Text.Json.Nodes.JsonNode?>! options) -> TypeSafeSharp.ChoiceQuestion!
 static TypeSafeSharp.Question.FromJson(System.Text.Json.Nodes.JsonObject! question) -> TypeSafeSharp.Question!
 static TypeSafeSharp.Question.Noul(System.Text.Json.Nodes.JsonNode? instructions, System.Text.Json.Nodes.JsonNode? whenTrue = null, System.Text.Json.Nodes.JsonNode? whenFalse = null) -> TypeSafeSharp.NoulQuestion!
 static TypeSafeSharp.Question.Score(System.Text.Json.Nodes.JsonNode? instructions, params System.Text.Json.Nodes.JsonNode![]! levels) -> TypeSafeSharp.ScoreQuestion!
 static TypeSafeSharp.TypeSafeModelFactory.ApiException(int statusCode, string? message = null, string? requestId = null, System.TimeSpan? retryAfter = null) -> TypeSafeSharp.TypeSafeApiException!
+static TypeSafeSharp.TypeSafeModelFactory.ChoiceAnswer(string! choice, double confidence, System.Collections.Generic.IReadOnlyDictionary<string!, double>! probabilities) -> TypeSafeSharp.ChoiceAnswer!
+static TypeSafeSharp.TypeSafeModelFactory.ModelCard(string! name, string! description, string! releaseDate) -> TypeSafeSharp.ModelCard!
+static TypeSafeSharp.TypeSafeModelFactory.NoulAnswer(double noul) -> TypeSafeSharp.NoulAnswer!
+static TypeSafeSharp.TypeSafeModelFactory.ScoreAnswer(double score, double confidence, System.Collections.Generic.IReadOnlyDictionary<int, System.Text.Json.JsonElement>! legend, System.Collections.Generic.IReadOnlyDictionary<int, double>! probabilities) -> TypeSafeSharp.ScoreAnswer!
+static TypeSafeSharp.TypeSafeModelFactory.SystemOneResponse(string! model, System.Collections.Generic.IReadOnlyDictionary<string!, TypeSafeSharp.Answer!>! answers, TypeSafeSharp.Usage! usage, string? requestId = null) -> TypeSafeSharp.SystemOneResponse!
+static TypeSafeSharp.TypeSafeModelFactory.UnknownAnswer(string! type, System.Text.Json.JsonElement raw) -> TypeSafeSharp.UnknownAnswer!
+static TypeSafeSharp.TypeSafeModelFactory.Usage(long inputTokens, long outputTokens) -> TypeSafeSharp.Usage!
+TypeSafeSharp.Answer
+TypeSafeSharp.ChoiceAnswer
+TypeSafeSharp.ChoiceAnswer.Choice.get -> string!
+TypeSafeSharp.ChoiceAnswer.Confidence.get -> double
+TypeSafeSharp.ChoiceAnswer.Probabilities.get -> System.Collections.Generic.IReadOnlyDictionary<string!, double>!
 TypeSafeSharp.ChoiceQuestion
 TypeSafeSharp.ChoiceQuestion.Options.get -> System.Collections.Generic.IReadOnlyDictionary<string!, System.Text.Json.Nodes.JsonNode?>!
+TypeSafeSharp.ModelCard
+TypeSafeSharp.ModelCard.Description.get -> string!
+TypeSafeSharp.ModelCard.Name.get -> string!
+TypeSafeSharp.ModelCard.ReleaseDate.get -> string!
+TypeSafeSharp.NoulAnswer
+TypeSafeSharp.NoulAnswer.Noul.get -> double
 TypeSafeSharp.NoulQuestion
 TypeSafeSharp.NoulQuestion.WhenFalse.get -> System.Text.Json.Nodes.JsonNode?
 TypeSafeSharp.NoulQuestion.WhenTrue.get -> System.Text.Json.Nodes.JsonNode?
 TypeSafeSharp.Question
 TypeSafeSharp.Question.Instructions.get -> System.Text.Json.Nodes.JsonNode?
+TypeSafeSharp.ScoreAnswer
+TypeSafeSharp.ScoreAnswer.Confidence.get -> double
+TypeSafeSharp.ScoreAnswer.Legend.get -> System.Collections.Generic.IReadOnlyDictionary<int, System.Text.Json.JsonElement>!
+TypeSafeSharp.ScoreAnswer.MostLikelyLevel.get -> int
+TypeSafeSharp.ScoreAnswer.Probabilities.get -> System.Collections.Generic.IReadOnlyDictionary<int, double>!
+TypeSafeSharp.ScoreAnswer.Score.get -> double
 TypeSafeSharp.ScoreQuestion
 TypeSafeSharp.ScoreQuestion.Levels.get -> System.Collections.Generic.IReadOnlyList<System.Text.Json.Nodes.JsonNode!>!
 TypeSafeSharp.SystemOneRequest
@@ -26,6 +55,14 @@ TypeSafeSharp.SystemOneRequest.Model.set -> void
 TypeSafeSharp.SystemOneRequest.Questions.get -> System.Collections.Generic.IReadOnlyDictionary<string!, TypeSafeSharp.Question!>!
 TypeSafeSharp.SystemOneRequest.State.get -> System.Text.Json.Nodes.JsonNode!
 TypeSafeSharp.SystemOneRequest.SystemOneRequest(System.Text.Json.Nodes.JsonNode! state, System.Collections.Generic.IReadOnlyDictionary<string!, TypeSafeSharp.Question!>! questions) -> void
+TypeSafeSharp.SystemOneResponse
+TypeSafeSharp.SystemOneResponse.Answers.get -> System.Collections.Generic.IReadOnlyDictionary<string!, TypeSafeSharp.Answer!>!
+TypeSafeSharp.SystemOneResponse.GetChoice(string! questionId) -> TypeSafeSharp.ChoiceAnswer!
+TypeSafeSharp.SystemOneResponse.GetNoul(string! questionId) -> TypeSafeSharp.NoulAnswer!
+TypeSafeSharp.SystemOneResponse.GetScore(string! questionId) -> TypeSafeSharp.ScoreAnswer!
+TypeSafeSharp.SystemOneResponse.Model.get -> string!
+TypeSafeSharp.SystemOneResponse.RequestId.get -> string?
+TypeSafeSharp.SystemOneResponse.Usage.get -> TypeSafeSharp.Usage!
 TypeSafeSharp.TypeSafeApiException
 TypeSafeSharp.TypeSafeApiException.Body.get -> string?
 TypeSafeSharp.TypeSafeApiException.Endpoint.get -> string!
@@ -94,6 +131,11 @@ TypeSafeSharp.TypeSafeUnprocessableEntityException.TypeSafeUnprocessableEntityEx
 TypeSafeSharp.TypeSafeUnprocessableEntityException.TypeSafeUnprocessableEntityException(string! message) -> void
 TypeSafeSharp.TypeSafeUnprocessableEntityException.TypeSafeUnprocessableEntityException(string! message, System.Exception! innerException) -> void
 TypeSafeSharp.TypeSafeUnprocessableEntityException.ValidationErrors.get -> System.Collections.Generic.IReadOnlyList<TypeSafeSharp.ValidationError!>!
+TypeSafeSharp.UnknownAnswer
+TypeSafeSharp.UnknownAnswer.Raw.get -> System.Text.Json.JsonElement
+TypeSafeSharp.Usage
+TypeSafeSharp.Usage.InputTokens.get -> long
+TypeSafeSharp.Usage.OutputTokens.get -> long
 TypeSafeSharp.ValidationError
 TypeSafeSharp.ValidationError.Location.get -> System.Collections.Generic.IReadOnlyList<string!>!
 TypeSafeSharp.ValidationError.Message.get -> string!
