@@ -98,13 +98,31 @@ public sealed class LiveTests : IDisposable
     public async Task PinnedModel()
     {
         var models = await _client.Models.ListAsync(Ct);
-        var pinned = models[0].Name;
+        // Prefer a versioned name. The response reports the concrete model that answered, so an
+        // alias such as jev-latest comes back as jev-1.13.0 and never echoes the alias
+        // (openapi.snapshot.json, SystemOneResponse.model).
+        var pinned = models.Select(m => m.Name).FirstOrDefault(IsVersionedModel) ?? models[0].Name;
         var request = new SystemOneRequest(Ticket, new Dictionary<string, Question> { ["is_urgent"] = Question.Noul("Does this convey urgency?") }) { Model = pinned };
 
         var response = await _client.SystemOneAsync(request, Ct);
 
-        Assert.Equal(pinned, response.Model);
+        if (IsVersionedModel(pinned))
+        {
+            Assert.Equal(pinned, response.Model);
+        }
+        else
+        {
+            // Every listed name is an alias, so the response cannot echo it. It is still a jev-
+            // name, and a model field that never reaches the API fails UnknownModel below with a
+            // 4xx instead of a 2xx.
+            Assert.StartsWith("jev-", response.Model, StringComparison.Ordinal);
+        }
     }
+
+    private static bool IsVersionedModel(string name) =>
+        name.StartsWith("jev-", StringComparison.Ordinal)
+        && name.Length > "jev-".Length
+        && char.IsDigit(name["jev-".Length]);
 
     [Fact]
     public async Task UnknownModel_IsAClientErrorWithRequestId()
