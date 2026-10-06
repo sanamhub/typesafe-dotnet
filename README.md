@@ -1,13 +1,18 @@
 # TypeSafeSharp
 
+[![NuGet](https://img.shields.io/nuget/v/TypeSafeSharp?logo=nuget)](https://www.nuget.org/packages/TypeSafeSharp)
+[![DI](https://img.shields.io/nuget/v/TypeSafeSharp.Extensions.DependencyInjection?logo=nuget&label=DI)](https://www.nuget.org/packages/TypeSafeSharp.Extensions.DependencyInjection)
+[![Downloads](https://img.shields.io/nuget/dt/TypeSafeSharp?logo=nuget)](https://www.nuget.org/packages/TypeSafeSharp)
+[![CI](https://github.com/sanamhub/typesafe-dotnet/actions/workflows/ci.yml/badge.svg)](https://github.com/sanamhub/typesafe-dotnet/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/sanamhub/typesafe-dotnet/blob/main/LICENSE)
+
 Unofficial .NET client for [TypeSafe AI](https://docs.typesafe.ai)'s System One API and its Jev
 model. For .NET teams who want the official JS and Python SDK behaviour (retries, errors, key
 handling) on `netstandard2.0` and `net10.0`, with typed answers, dependency injection and
 OpenTelemetry tracing.
 
-> **Status: built, not yet published.** The client, the DI package and their tests are done;
-> `0.1.0` is not on nuget.org yet. The code in this README compiles against the packed packages.
-> The design is in [docs/PLAN.md](docs/PLAN.md) and the ADRs below.
+> **Status:** `0.1.0-alpha.1` is on nuget.org. The client, the DI package and their tests are
+> done; `0.1.0` is next. The design is in [docs/PLAN.md](docs/PLAN.md) and the ADRs below.
 
 Not affiliated with or endorsed by TypeSafe AI. The official SDKs are
 [typesafe-sdk-js](https://github.com/typesafe-ai/typesafe-sdk-js) and
@@ -178,7 +183,7 @@ builds the exception for the failure path.
 
 | Checked against | Version |
 | --- | --- |
-| TypeSafeSharp | 0.1.0 (unreleased) |
+| TypeSafeSharp | 0.1.0-alpha.1 |
 | API (OpenAPI document) | 0.2.0 |
 | `typesafe-sdk-js` | 0.6.0 |
 | `typesafe-sdk-python` | 0.7.2 |
@@ -238,22 +243,6 @@ echoing it, never logs headers or bodies, and never copies request data into exc
 | [docs/adr](docs/adr) | Architecture decisions 0001 to 0013 |
 | [docs/runbooks/release.md](docs/runbooks/release.md) | Release, post-release checks and rollback |
 | [sample](sample) | Sample consumer: console, batch with NativeAOT, ASP.NET Core, .NET Framework at C# 7.3 |
-
-| ADR | Decision |
-| --- | --- |
-| [0001](docs/adr/0001-target-netstandard2.0-and-net10.0.md) | Target `netstandard2.0` and `net10.0` |
-| [0002](docs/adr/0002-package-name-and-unofficial-positioning.md) | Package name `TypeSafeSharp`, marked unofficial |
-| [0003](docs/adr/0003-flat-layout-instead-of-clean-architecture-projects.md) | One project with folders, not Clean Architecture projects |
-| [0004](docs/adr/0004-system-text-json-without-source-generation-and-jsonnode-values.md) | System.Text.Json reader and writer, `JsonNode` values |
-| [0005](docs/adr/0005-hand-rolled-retries-with-official-sdk-defaults.md) | Hand-rolled retries with official SDK defaults |
-| [0006](docs/adr/0006-exception-hierarchy.md) | Exception hierarchy |
-| [0007](docs/adr/0007-async-only-api-no-streaming-batch-helper.md) | Async-only, no streaming, batch helper |
-| [0008](docs/adr/0008-api-key-handling-and-redaction.md) | API key handling, headers and bodies never logged |
-| [0009](docs/adr/0009-dependency-injection-in-a-separate-package.md) | Dependency injection in a separate package |
-| [0010](docs/adr/0010-logging-tracing-and-metrics.md) | Logging and tracing, metrics later |
-| [0011](docs/adr/0011-versioning-and-release-with-trusted-publishing.md) | Versioning and release with trusted publishing |
-| [0012](docs/adr/0012-test-strategy-and-api-drift-detection.md) | Test strategy and API drift detection |
-| [0013](docs/adr/0013-strong-name-the-assemblies.md) | Strong-name the assemblies |
 
 ## License
 
