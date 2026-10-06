@@ -1,0 +1,8 @@
+# The repository's .editorconfig is tuned for the library (ConfigureAwait, XML docs, public API).
+# Application code does not follow those rules, so the samples stop the lookup here.
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+insert_final_newline = true

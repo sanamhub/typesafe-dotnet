@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <!--
+      The one place to change which TypeSafeSharp release the samples run against.
+      The first release is 0.1.0-alpha.1, before 0.1.0. Set this to it to try the alpha.
+    -->
+    <TypeSafeSharpVersion>0.1.0</TypeSafeSharpVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="TypeSafeSharp" Version="$(TypeSafeSharpVersion)" />
+    <PackageVersion Include="TypeSafeSharp.Extensions.DependencyInjection" Version="$(TypeSafeSharpVersion)" />
+    <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" />
+  </ItemGroup>
+</Project>

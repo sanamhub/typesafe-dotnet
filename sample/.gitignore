@@ -1,0 +1,14 @@
+bin/
+obj/
+.vs/
+*.user
+# Never commit keys. The samples read TYPESAFE_API_KEY or user-secrets.
+.env
+*.env
+appsettings.Development.json
+appsettings.*.Development.json
+
+# Editor and build output
+.vscode/
+.idea/
+artifacts/

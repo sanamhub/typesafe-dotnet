@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <!-- Key setup: README, "Set your API key". -->
+    <UserSecretsId>typesafesharp-samples-webapi</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="TypeSafeSharp.Extensions.DependencyInjection" />
+  </ItemGroup>
+</Project>

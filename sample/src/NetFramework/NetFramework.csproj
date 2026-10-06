@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- Loads the netstandard2.0 asset. Runs on Windows; builds anywhere. -->
+    <TargetFramework>net481</TargetFramework>
+    <!-- C# 7.3 is the default for .NET Framework projects. Pinning it proves such callers compile. -->
+    <LangVersion>7.3</LangVersion>
+    <!-- Both need C# 8 or later. -->
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="TypeSafeSharp" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Quickstart/Quickstart.csproj" />
+    <Project Path="src/Batch/Batch.csproj" />
+    <Project Path="src/WebApi/WebApi.csproj" />
+    <Project Path="src/NetFramework/NetFramework.csproj" />
+  </Folder>
+</Solution>
