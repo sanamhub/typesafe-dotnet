@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 # Consumes the packed packages the way a user would, from projects with no reference to this
 # repository's source: NativeAOT on Linux and macOS (AC-4.3), C# 7.3 on .NET Framework on
-# Windows (AC-4.4). Both make one call to a loopback stub with a fake key.
+# Windows (AC-4.4), and an ASP.NET Core app with AddTypeSafe under NativeAOT. The two console
+# consumers make one call each to a loopback stub with a fake key.
 #
 #   tests/packaging/verify-package.sh                       pack, then run the consumer for this OS
 #   tests/packaging/verify-package.sh --packages <dir>      use the .nupkg files already in <dir>
 #   tests/packaging/verify-package.sh --consumer Aot        run one consumer regardless of OS
+#
+# Consumers: Aot (NativeAOT console, one call), AotWeb (ASP.NET Core with AddTypeSafe, publish
+# only), NetFx (.NET Framework 4.8.1 at C# 7.3, one call).
 set -euo pipefail
 
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -23,7 +27,7 @@ done
 if [ ${#CONSUMERS[@]} -eq 0 ]; then
   case "$(uname -s)" in
     MINGW*|MSYS*|CYGWIN*) CONSUMERS=(NetFx) ;;
-    *) CONSUMERS=(Aot) ;;
+    *) CONSUMERS=(Aot AotWeb) ;;
   esac
 fi
 
@@ -88,6 +92,10 @@ for consumer in "${CONSUMERS[@]}"; do
     Aot)
       dotnet publish "$project" -c Release -o "$(native "$out")" -p:TypeSafeSharpVersion="$VERSION" --verbosity quiet
       "$out/Aot"
+      ;;
+    AotWeb)
+      dotnet publish "$project" -c Release -o "$(native "$out")" -p:TypeSafeSharpVersion="$VERSION" --verbosity quiet
+      echo "PASS (AotWeb publish)"
       ;;
     NetFx)
       dotnet build "$project" -c Release -o "$(native "$out")" -p:TypeSafeSharpVersion="$VERSION" --verbosity quiet

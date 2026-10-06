@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <!-- AC-4.3, second half: AddTypeSafe(IConfiguration) in an ASP.NET Core app published with
+       NativeAOT and warnings as errors. Publish only; the call path is the Aot consumer's job. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TypeSafeSharp.Extensions.DependencyInjection" Version="$(TypeSafeSharpVersion)" />
+    <TrimmerRootAssembly Include="TypeSafeSharp" />
+    <TrimmerRootAssembly Include="TypeSafeSharp.Extensions.DependencyInjection" />
+  </ItemGroup>
+
+</Project>

@@ -7,6 +7,10 @@
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
     <!-- Reflection-free binding, so AddTypeSafe(IConfiguration) stays trim and AOT safe (ADR-0009). -->
     <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
+    <!-- The generator reports that it skips TypeSafeClientOptions.LoggerFactory, an interface.
+         That is the intent: the logger comes from the container (PLAN.md section 3.7). Generator
+         diagnostics ignore #pragma, and this project has one Bind call, so the scope is that call. -->
+    <NoWarn>$(NoWarn);SYSLIB1100;SYSLIB1101</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <EnablePackageValidation>true</EnablePackageValidation>
     <IsPackable>true</IsPackable>
