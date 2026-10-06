@@ -35,6 +35,8 @@ internal sealed class Transport
 
     public ILogger Logger { get; }
 
+    public TimeProvider Time => _time;
+
     public void MarkDisposed() => _disposed = true;
 
     public async Task<RawResponse> SendAsync(HttpMethod method, string path, byte[]? body, CallSettings call, CancellationToken cancellationToken)

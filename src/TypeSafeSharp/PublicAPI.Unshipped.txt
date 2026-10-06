@@ -25,6 +25,19 @@ static TypeSafeSharp.TypeSafeModelFactory.SystemOneResponse(string! model, Syste
 static TypeSafeSharp.TypeSafeModelFactory.UnknownAnswer(string! type, System.Text.Json.JsonElement raw) -> TypeSafeSharp.UnknownAnswer!
 static TypeSafeSharp.TypeSafeModelFactory.Usage(long inputTokens, long outputTokens) -> TypeSafeSharp.Usage!
 TypeSafeSharp.Answer
+TypeSafeSharp.BatchItem<TItem>
+TypeSafeSharp.BatchItem<TItem>.Elapsed.get -> System.TimeSpan
+TypeSafeSharp.BatchItem<TItem>.Exception.get -> System.Exception?
+TypeSafeSharp.BatchItem<TItem>.Index.get -> int
+TypeSafeSharp.BatchItem<TItem>.Item.get -> TItem
+TypeSafeSharp.BatchItem<TItem>.Response.get -> TypeSafeSharp.SystemOneResponse?
+TypeSafeSharp.BatchItem<TItem>.Succeeded.get -> bool
+TypeSafeSharp.BatchOptions
+TypeSafeSharp.BatchOptions.BatchOptions() -> void
+TypeSafeSharp.BatchOptions.MaxConcurrency.get -> int
+TypeSafeSharp.BatchOptions.MaxConcurrency.set -> void
+TypeSafeSharp.BatchOptions.RequestOptions.get -> TypeSafeSharp.TypeSafeRequestOptions?
+TypeSafeSharp.BatchOptions.RequestOptions.set -> void
 TypeSafeSharp.ChoiceAnswer
 TypeSafeSharp.ChoiceAnswer.Choice.get -> string!
 TypeSafeSharp.ChoiceAnswer.Confidence.get -> double
@@ -93,6 +106,8 @@ TypeSafeSharp.TypeSafeBadRequestException.TypeSafeBadRequestException(string! me
 TypeSafeSharp.TypeSafeBadRequestException.TypeSafeBadRequestException(string! message, System.Exception! innerException) -> void
 TypeSafeSharp.TypeSafeClient
 TypeSafeSharp.TypeSafeClient.Dispose() -> void
+TypeSafeSharp.TypeSafeClient.EvaluateManyAsync<TItem>(System.Collections.Generic.IEnumerable<TItem>! items, System.Func<TItem, TypeSafeSharp.SystemOneRequest!>! createRequest, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<TypeSafeSharp.BatchItem<TItem>!>!
+TypeSafeSharp.TypeSafeClient.EvaluateManyAsync<TItem>(System.Collections.Generic.IEnumerable<TItem>! items, System.Func<TItem, TypeSafeSharp.SystemOneRequest!>! createRequest, TypeSafeSharp.BatchOptions? options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<TypeSafeSharp.BatchItem<TItem>!>!
 TypeSafeSharp.TypeSafeClient.SystemOneAsync(System.Text.Json.Nodes.JsonNode! state, System.Collections.Generic.IReadOnlyDictionary<string!, TypeSafeSharp.Question!>! questions, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<TypeSafeSharp.SystemOneResponse!>!
 TypeSafeSharp.TypeSafeClient.SystemOneAsync(TypeSafeSharp.SystemOneRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<TypeSafeSharp.SystemOneResponse!>!
 TypeSafeSharp.TypeSafeClient.TypeSafeClient() -> void

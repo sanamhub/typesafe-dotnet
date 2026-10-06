@@ -13,7 +13,7 @@
     <!-- A leg that discovers fewer tests than this fails instead of passing empty. Raised as tasks
          add tests. Set here, not on the command line, because arguments there reach every
          test project and one number cannot fit both. -->
-    <TestingPlatformCommandLineArguments>--minimum-expected-tests 240</TestingPlatformCommandLineArguments>
+    <TestingPlatformCommandLineArguments>--minimum-expected-tests 250</TestingPlatformCommandLineArguments>
   </PropertyGroup>
 
   <ItemGroup>

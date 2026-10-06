@@ -154,6 +154,48 @@ public class TypeSafeClient : IDisposable
         }
     }
 
+    /// <summary>
+    /// Evaluates many items with up to 4 calls at once, yielding each result as it completes.
+    /// Arguments are checked here, not when enumeration starts.
+    /// </summary>
+    /// <typeparam name="TItem">The caller's item type.</typeparam>
+    /// <param name="items">The items, read lazily as slots free up.</param>
+    /// <param name="createRequest">Builds the request for one item. An <see cref="ArgumentException"/> it throws fails that item only.</param>
+    /// <param name="cancellationToken">Stops the enumeration and cancels the calls in flight.</param>
+    /// <returns>One <see cref="BatchItem{TItem}"/> per item, in completion order.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="items"/> or <paramref name="createRequest"/> is null.</exception>
+    /// <exception cref="TypeSafeAuthenticationException">Thrown while enumerating: the key was rejected. Ends the batch, since every item would fail the same way.</exception>
+    /// <exception cref="TypeSafePermissionDeniedException">Thrown while enumerating: the key may not use this model or endpoint. Ends the batch.</exception>
+    /// <exception cref="TypeSafeNotFoundException">Thrown while enumerating: usually a wrong model or base URL. Ends the batch.</exception>
+    /// <exception cref="TypeSafeConfigurationException">Thrown while enumerating: the client cannot send at all. Ends the batch.</exception>
+    /// <exception cref="OperationCanceledException">Thrown while enumerating: <paramref name="cancellationToken"/> was cancelled.</exception>
+    /// <exception cref="ObjectDisposedException">Thrown while enumerating: the client was disposed.</exception>
+    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple public overloads with optional parameters", Justification = "The overload shapes in PLAN.md section 3.1 were checked with the compiler: each call form binds to exactly one overload.")]
+    public IAsyncEnumerable<BatchItem<TItem>> EvaluateManyAsync<TItem>(IEnumerable<TItem> items, Func<TItem, SystemOneRequest> createRequest, CancellationToken cancellationToken = default)
+        => EvaluateManyAsync(items, createRequest, null, cancellationToken);
+
+    /// <summary>
+    /// Evaluates many items with bounded concurrency, yielding each result as it completes.
+    /// Arguments are checked here, not when enumeration starts.
+    /// </summary>
+    /// <typeparam name="TItem">The caller's item type.</typeparam>
+    /// <param name="items">The items, read lazily as slots free up.</param>
+    /// <param name="createRequest">Builds the request for one item. An <see cref="ArgumentException"/> it throws fails that item only.</param>
+    /// <param name="options">Concurrency and per-call options, or null for the defaults.</param>
+    /// <param name="cancellationToken">Stops the enumeration and cancels the calls in flight.</param>
+    /// <returns>One <see cref="BatchItem{TItem}"/> per item, in completion order.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="items"/> or <paramref name="createRequest"/> is null.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><see cref="BatchOptions.MaxConcurrency"/> is less than 1.</exception>
+    /// <exception cref="TypeSafeAuthenticationException">Thrown while enumerating: the key was rejected. Ends the batch, since every item would fail the same way.</exception>
+    /// <exception cref="TypeSafePermissionDeniedException">Thrown while enumerating: the key may not use this model or endpoint. Ends the batch.</exception>
+    /// <exception cref="TypeSafeNotFoundException">Thrown while enumerating: usually a wrong model or base URL. Ends the batch.</exception>
+    /// <exception cref="TypeSafeConfigurationException">Thrown while enumerating: the client cannot send at all. Ends the batch.</exception>
+    /// <exception cref="OperationCanceledException">Thrown while enumerating: <paramref name="cancellationToken"/> was cancelled.</exception>
+    /// <exception cref="ObjectDisposedException">Thrown while enumerating: the client was disposed.</exception>
+    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple public overloads with optional parameters", Justification = "The overload shapes in PLAN.md section 3.1 were checked with the compiler: each call form binds to exactly one overload.")]
+    public IAsyncEnumerable<BatchItem<TItem>> EvaluateManyAsync<TItem>(IEnumerable<TItem> items, Func<TItem, SystemOneRequest> createRequest, BatchOptions? options, CancellationToken cancellationToken = default)
+        => BatchRunner.Run(this, items, createRequest, options, _transport?.Time ?? TimeProvider.System, cancellationToken);
+
     /// <summary>Stops the client. Calls in flight and later calls throw <see cref="ObjectDisposedException"/>. Disposes the <see cref="HttpClient"/> only if this client created it.</summary>
     public void Dispose()
     {
