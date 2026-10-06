@@ -66,14 +66,17 @@ jobs:
       # The key reaches this step only, as an environment variable. Never echo it, never pass it
       # on a command line, never add a step that prints the environment.
       - name: live tests
+        # The live subset runs eight tests, below the full-suite minimum in the csproj. Pass the
+        # property here, not --minimum-expected-tests: dotnet test consumes that flag itself and
+        # does not forward it to the test host when --results-directory is set.
         env:
           TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
         run: >
           dotnet test --project tests/TypeSafeSharp.Tests -c Release --no-build -f net10.0
+          -p:MinimumExpectedTests=8
           --filter-trait "Category=Live"
-          --minimum-expected-tests 8
           --report-trx --results-directory TestResults
-          --diagnostic --diagnostic-verbosity Debug --diagnostic-synchronous-write
+          --diagnostic --diagnostic-verbosity Information
 
       # A failing live run must leave its report behind. A host crash can coexist with every
       # test green, and the console summary alone does not name the test that crashed.
