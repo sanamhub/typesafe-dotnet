@@ -203,6 +203,9 @@ public class TypeSafeClient : IDisposable
         GC.SuppressFinalize(this);
     }
 
+    // Swapped only by tests (AC-3.15), which run in the non-parallel environment collection.
+    internal static Func<bool> IsBrowser { get; set; } = static () => RuntimeInformation.IsOSPlatform(OSPlatform.Create("BROWSER"));
+
     internal static void ThrowIfBrowser(bool isBrowser)
     {
         // As the JS SDK's refuseBrowser: the key would ship to every visitor.
@@ -242,7 +245,7 @@ public class TypeSafeClient : IDisposable
 
     private static ClientSettings Validate(TypeSafeClientOptions options)
     {
-        ThrowIfBrowser(RuntimeInformation.IsOSPlatform(OSPlatform.Create("BROWSER")));
+        ThrowIfBrowser(IsBrowser());
         return ClientSettings.From(Guard.NotNull(options));
     }
 

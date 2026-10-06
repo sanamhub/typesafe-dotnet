@@ -244,6 +244,42 @@ public sealed class OptionsTests : IDisposable
         Assert.Equal(TimeSpan.FromSeconds(10), settings.AttemptTimeout);
     }
 
+    [Fact]
+    public void BrowserCheck_ForcedOn_EveryPublicConstructorThrows()
+    {
+        // AC-3.15. This class runs in the non-parallel environment collection, so swapping the static is safe.
+        var saved = TypeSafeClient.IsBrowser;
+        TypeSafeClient.IsBrowser = () => true;
+        try
+        {
+            using var http = new System.Net.Http.HttpClient();
+            const string Expected = "TypeSafeClient runs server-side only; a browser app would expose the API key.";
+            Assert.Equal(Expected, Assert.Throws<TypeSafeConfigurationException>(() => new TypeSafeClient(TestKey)).Message);
+            Assert.Equal(Expected, Assert.Throws<TypeSafeConfigurationException>(() => new TypeSafeClient(Options())).Message);
+            Assert.Equal(Expected, Assert.Throws<TypeSafeConfigurationException>(() => new TypeSafeClient(http, Options())).Message);
+        }
+        finally
+        {
+            TypeSafeClient.IsBrowser = saved;
+        }
+    }
+
+    [Fact]
+    public void CoreAssembly_IsMarkedUnsupportedInBrowsers()
+    {
+        // Only the net10.0 build keeps the attribute: on netstandard2.0 PolySharp's copy is [Conditional].
+        var attribute = typeof(TypeSafeClient).Assembly.GetCustomAttributes(inherit: false)
+            .FirstOrDefault(a => a.GetType().FullName == "System.Runtime.Versioning.UnsupportedOSPlatformAttribute");
+        if (System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.Ordinal))
+        {
+            Assert.Null(attribute);
+        }
+        else
+        {
+            Assert.Equal("browser", attribute!.GetType().GetProperty("PlatformName")!.GetValue(attribute));
+        }
+    }
+
     [Theory]
     [InlineData(408, true)]
     [InlineData(429, true)]
