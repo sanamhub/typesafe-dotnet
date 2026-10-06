@@ -81,6 +81,27 @@ jobs:
           path: TestResults
           retention-days: 7
 
+  packaging:
+    # Installs the packed packages into projects outside the repository and makes one call each:
+    # NativeAOT on Linux (AC-4.3), C# 7.3 on .NET Framework on Windows (AC-4.4). This is where a
+    # package that builds and tests cleanly but fails at a consumer's first call shows up.
+    name: packaging (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+      - name: pack and consume
+        shell: bash
+        run: tests/packaging/verify-package.sh
+
   no-if:
     # AC-4.6: the only conditional compilation in src is `#if NET` in HttpDefaults.cs, which
     # picks the HTTP handler (ADR-0001). Anything else means the two targets behave differently.

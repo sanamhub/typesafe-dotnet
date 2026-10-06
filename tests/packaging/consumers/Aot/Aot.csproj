@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Consumes the packed TypeSafeSharp, never the project. verify-package.sh copies this folder
+       to a temp directory, writes a NuGet.Config for the package folder and sets the version. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Consumer</RootNamespace>
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <!-- AC-4.3: any IL2xxx or IL3xxx warning from the package fails the publish. -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TypeSafeSharp" Version="$(TypeSafeSharpVersion)" />
+    <!-- Analyse all of TypeSafeSharp, not just what Program.cs happens to reach. -->
+    <TrimmerRootAssembly Include="TypeSafeSharp" />
+    <Compile Include="../Shared/StubServer.cs" />
+  </ItemGroup>
+
+</Project>

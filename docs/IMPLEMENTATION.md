@@ -887,6 +887,12 @@ every PR.
 Windows desktop without the C++ workload, publish fails with "Platform linker not found". That
 is an environment problem, not a code problem.
 
+Found while building T10 (2026-10-06): the script must `cd` out of the repository before
+building a consumer, or the repository's `global.json` picks the SDK for it. On a Windows desktop
+without the C++ workload, run the AOT consumer in WSL against packages packed on Windows:
+`tests/packaging/verify-package.sh --packages artifacts/<dir> --consumer Aot`. The stub answers
+with `noul.json` plus a choice answer, so the AOT build reads both kinds.
+
 ## T11 Retry loop, timeouts and budget
 
 **Goal.** The retry behaviour from ADR-0005, exactly, testable in milliseconds.

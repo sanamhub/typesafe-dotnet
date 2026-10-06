@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <!-- Versions come from the package folder under test, not from the repository. -->
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+</Project>
