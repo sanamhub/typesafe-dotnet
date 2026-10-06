@@ -1,3 +1,74 @@
 #nullable enable
+static TypeSafeSharp.TypeSafeModelFactory.ApiException(int statusCode, string? message = null, string? requestId = null, System.TimeSpan? retryAfter = null) -> TypeSafeSharp.TypeSafeApiException!
+TypeSafeSharp.TypeSafeApiException
+TypeSafeSharp.TypeSafeApiException.Body.get -> string?
+TypeSafeSharp.TypeSafeApiException.Endpoint.get -> string!
+TypeSafeSharp.TypeSafeApiException.Headers.get -> System.Collections.Generic.IReadOnlyDictionary<string!, System.Collections.Generic.IReadOnlyList<string!>!>!
+TypeSafeSharp.TypeSafeApiException.RequestId.get -> string?
+TypeSafeSharp.TypeSafeApiException.StatusCode.get -> System.Net.HttpStatusCode
+TypeSafeSharp.TypeSafeApiException.TypeSafeApiException() -> void
+TypeSafeSharp.TypeSafeApiException.TypeSafeApiException(string! message) -> void
+TypeSafeSharp.TypeSafeApiException.TypeSafeApiException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeAuthenticationException
+TypeSafeSharp.TypeSafeAuthenticationException.TypeSafeAuthenticationException() -> void
+TypeSafeSharp.TypeSafeAuthenticationException.TypeSafeAuthenticationException(string! message) -> void
+TypeSafeSharp.TypeSafeAuthenticationException.TypeSafeAuthenticationException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeBadRequestException
+TypeSafeSharp.TypeSafeBadRequestException.TypeSafeBadRequestException() -> void
+TypeSafeSharp.TypeSafeBadRequestException.TypeSafeBadRequestException(string! message) -> void
+TypeSafeSharp.TypeSafeBadRequestException.TypeSafeBadRequestException(string! message, System.Exception! innerException) -> void
 TypeSafeSharp.TypeSafeClientOptions
 TypeSafeSharp.TypeSafeClientOptions.TypeSafeClientOptions() -> void
+TypeSafeSharp.TypeSafeConfigurationException
+TypeSafeSharp.TypeSafeConfigurationException.TypeSafeConfigurationException() -> void
+TypeSafeSharp.TypeSafeConfigurationException.TypeSafeConfigurationException(string! message) -> void
+TypeSafeSharp.TypeSafeConfigurationException.TypeSafeConfigurationException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeConnectionException
+TypeSafeSharp.TypeSafeConnectionException.TypeSafeConnectionException() -> void
+TypeSafeSharp.TypeSafeConnectionException.TypeSafeConnectionException(string! message) -> void
+TypeSafeSharp.TypeSafeConnectionException.TypeSafeConnectionException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeException
+TypeSafeSharp.TypeSafeException.TypeSafeException() -> void
+TypeSafeSharp.TypeSafeException.TypeSafeException(string! message) -> void
+TypeSafeSharp.TypeSafeException.TypeSafeException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeInternalServerException
+TypeSafeSharp.TypeSafeInternalServerException.TypeSafeInternalServerException() -> void
+TypeSafeSharp.TypeSafeInternalServerException.TypeSafeInternalServerException(string! message) -> void
+TypeSafeSharp.TypeSafeInternalServerException.TypeSafeInternalServerException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeModelFactory
+TypeSafeSharp.TypeSafeNotFoundException
+TypeSafeSharp.TypeSafeNotFoundException.TypeSafeNotFoundException() -> void
+TypeSafeSharp.TypeSafeNotFoundException.TypeSafeNotFoundException(string! message) -> void
+TypeSafeSharp.TypeSafeNotFoundException.TypeSafeNotFoundException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeOverloadedException
+TypeSafeSharp.TypeSafeOverloadedException.TypeSafeOverloadedException() -> void
+TypeSafeSharp.TypeSafeOverloadedException.TypeSafeOverloadedException(string! message) -> void
+TypeSafeSharp.TypeSafeOverloadedException.TypeSafeOverloadedException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafePermissionDeniedException
+TypeSafeSharp.TypeSafePermissionDeniedException.TypeSafePermissionDeniedException() -> void
+TypeSafeSharp.TypeSafePermissionDeniedException.TypeSafePermissionDeniedException(string! message) -> void
+TypeSafeSharp.TypeSafePermissionDeniedException.TypeSafePermissionDeniedException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeRateLimitException
+TypeSafeSharp.TypeSafeRateLimitException.RetryAfter.get -> System.TimeSpan?
+TypeSafeSharp.TypeSafeRateLimitException.TypeSafeRateLimitException() -> void
+TypeSafeSharp.TypeSafeRateLimitException.TypeSafeRateLimitException(string! message) -> void
+TypeSafeSharp.TypeSafeRateLimitException.TypeSafeRateLimitException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeResponseValidationException
+TypeSafeSharp.TypeSafeResponseValidationException.JsonPath.get -> string?
+TypeSafeSharp.TypeSafeResponseValidationException.TypeSafeResponseValidationException() -> void
+TypeSafeSharp.TypeSafeResponseValidationException.TypeSafeResponseValidationException(string! message) -> void
+TypeSafeSharp.TypeSafeResponseValidationException.TypeSafeResponseValidationException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeTimeoutException
+TypeSafeSharp.TypeSafeTimeoutException.Timeout.get -> System.TimeSpan
+TypeSafeSharp.TypeSafeTimeoutException.TypeSafeTimeoutException() -> void
+TypeSafeSharp.TypeSafeTimeoutException.TypeSafeTimeoutException(string! message) -> void
+TypeSafeSharp.TypeSafeTimeoutException.TypeSafeTimeoutException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeUnprocessableEntityException
+TypeSafeSharp.TypeSafeUnprocessableEntityException.TypeSafeUnprocessableEntityException() -> void
+TypeSafeSharp.TypeSafeUnprocessableEntityException.TypeSafeUnprocessableEntityException(string! message) -> void
+TypeSafeSharp.TypeSafeUnprocessableEntityException.TypeSafeUnprocessableEntityException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeUnprocessableEntityException.ValidationErrors.get -> System.Collections.Generic.IReadOnlyList<TypeSafeSharp.ValidationError!>!
+TypeSafeSharp.ValidationError
+TypeSafeSharp.ValidationError.Location.get -> System.Collections.Generic.IReadOnlyList<string!>!
+TypeSafeSharp.ValidationError.Message.get -> string!
+TypeSafeSharp.ValidationError.Type.get -> string!
