@@ -11,9 +11,6 @@ model. For .NET teams who want the official JS and Python SDK behaviour (retries
 handling) on `netstandard2.0` and `net10.0`, with typed answers, dependency injection and
 OpenTelemetry tracing.
 
-> **Status:** `0.1.0-alpha.1` is on nuget.org. The client, the DI package and their tests are
-> done; `0.1.0` is next. The design is in [docs/PLAN.md](docs/PLAN.md) and the [ADRs](docs/adr).
-
 Not affiliated with or endorsed by TypeSafe AI. The official SDKs are
 [typesafe-sdk-js](https://github.com/typesafe-ai/typesafe-sdk-js) and
 [typesafe-sdk-python](https://github.com/typesafe-ai/typesafe-sdk-python).
