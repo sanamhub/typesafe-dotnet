@@ -1,5 +1,23 @@
 #nullable enable
+abstract TypeSafeSharp.Question.Type.get -> string!
+override TypeSafeSharp.ChoiceQuestion.Type.get -> string!
+override TypeSafeSharp.NoulQuestion.Type.get -> string!
+override TypeSafeSharp.ScoreQuestion.Type.get -> string!
+static TypeSafeSharp.Question.Choice(System.Text.Json.Nodes.JsonNode? instructions, params string![]! options) -> TypeSafeSharp.ChoiceQuestion!
+static TypeSafeSharp.Question.Choice(System.Text.Json.Nodes.JsonNode? instructions, System.Collections.Generic.IReadOnlyDictionary<string!, System.Text.Json.Nodes.JsonNode?>! options) -> TypeSafeSharp.ChoiceQuestion!
+static TypeSafeSharp.Question.FromJson(System.Text.Json.Nodes.JsonObject! question) -> TypeSafeSharp.Question!
+static TypeSafeSharp.Question.Noul(System.Text.Json.Nodes.JsonNode? instructions, System.Text.Json.Nodes.JsonNode? whenTrue = null, System.Text.Json.Nodes.JsonNode? whenFalse = null) -> TypeSafeSharp.NoulQuestion!
+static TypeSafeSharp.Question.Score(System.Text.Json.Nodes.JsonNode? instructions, params System.Text.Json.Nodes.JsonNode![]! levels) -> TypeSafeSharp.ScoreQuestion!
 static TypeSafeSharp.TypeSafeModelFactory.ApiException(int statusCode, string? message = null, string? requestId = null, System.TimeSpan? retryAfter = null) -> TypeSafeSharp.TypeSafeApiException!
+TypeSafeSharp.ChoiceQuestion
+TypeSafeSharp.ChoiceQuestion.Options.get -> System.Collections.Generic.IReadOnlyDictionary<string!, System.Text.Json.Nodes.JsonNode?>!
+TypeSafeSharp.NoulQuestion
+TypeSafeSharp.NoulQuestion.WhenFalse.get -> System.Text.Json.Nodes.JsonNode?
+TypeSafeSharp.NoulQuestion.WhenTrue.get -> System.Text.Json.Nodes.JsonNode?
+TypeSafeSharp.Question
+TypeSafeSharp.Question.Instructions.get -> System.Text.Json.Nodes.JsonNode?
+TypeSafeSharp.ScoreQuestion
+TypeSafeSharp.ScoreQuestion.Levels.get -> System.Collections.Generic.IReadOnlyList<System.Text.Json.Nodes.JsonNode!>!
 TypeSafeSharp.TypeSafeApiException
 TypeSafeSharp.TypeSafeApiException.Body.get -> string?
 TypeSafeSharp.TypeSafeApiException.Endpoint.get -> string!
