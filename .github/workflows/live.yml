@@ -73,6 +73,7 @@ jobs:
           --filter-trait "Category=Live"
           --minimum-expected-tests 8
           --report-trx --results-directory TestResults
+          --diagnostic --diagnostic-verbosity Debug --diagnostic-synchronous-write
 
       # A failing live run must leave its report behind. A host crash can coexist with every
       # test green, and the console summary alone does not name the test that crashed.
