@@ -45,6 +45,8 @@ Your own types go in as `JsonNode`:
   then `(Team)Enum.Parse(typeof(Team), response.GetChoice("team").Choice)`.
 - A question shape this package does not model yet: `Question.FromJson(jsonObject)`.
 
+Every public type is in the [API reference](https://github.com/sanamhub/typesafe-dotnet/wiki).
+
 ## Many requests at once
 
 `EvaluateManyAsync` runs up to `MaxConcurrency` calls (default 4) and yields each result as it
@@ -101,6 +103,22 @@ dotnet add package TypeSafeSharp.Extensions.DependencyInjection
 
 Both assemblies are strong-named, so signed .NET Framework applications can reference them. The
 API is callable from C# 7.3, the .NET Framework default: no `init` setters, no records.
+
+## Configuration
+
+Each setting resolves in order: the option value, then an environment variable, then a default.
+
+| Setting | Option | Environment variable | Default |
+| --- | --- | --- | --- |
+| API key | `ApiKey` | `TYPESAFE_API_KEY` | none; missing throws |
+| Base URL | `BaseUrl` | `TYPESAFE_BASE_URL` | `https://api.typesafe.ai` |
+| Model | `DefaultModel` | `TYPESAFE_DEFAULT_MODEL` | `jev-latest` |
+
+Reading everything from the environment is `new TypeSafeClient(new TypeSafeClientOptions())`.
+The key is validated when the client is built: an empty key, whitespace inside it, a control
+character, or a non-ASCII character each throws `TypeSafeConfigurationException`. An explicit
+empty `ApiKey` does not fall back to the environment. Keep the key in the environment, in user
+secrets or in a vault, never in source ([Security](#security)).
 
 ## ASP.NET Core
 
@@ -241,6 +259,7 @@ echoing it, never logs headers or bodies, and never copies request data into exc
 | [docs/PLAN.md](docs/PLAN.md) | API summary, existing .NET SDKs, public API, build, tests, CI, phases, risks, open questions |
 | [docs/IMPLEMENTATION.md](docs/IMPLEMENTATION.md) | Ordered implementation tasks with done criteria and compile-checked reference code |
 | [docs/adr](docs/adr) | Architecture decisions 0001 to 0013 |
+| [Wiki](https://github.com/sanamhub/typesafe-dotnet/wiki) | Public API reference |
 | [docs/runbooks/release.md](docs/runbooks/release.md) | Release, post-release checks and rollback |
 | [sample](sample) | Sample consumer: console, batch with NativeAOT, ASP.NET Core, .NET Framework at C# 7.3 |
 

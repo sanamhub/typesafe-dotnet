@@ -24,6 +24,7 @@ Create one client per app and share it. Server-side only: do not ship a key insi
 distribute. For ASP.NET Core, add
 [TypeSafeSharp.Extensions.DependencyInjection](https://www.nuget.org/packages/TypeSafeSharp.Extensions.DependencyInjection).
 
+- [API reference](https://github.com/sanamhub/typesafe-dotnet/wiki): every public type
 - [README](https://github.com/sanamhub/typesafe-dotnet#readme): batches, testing your code,
   resilience pipelines, recipes
 - [Limits](https://github.com/sanamhub/typesafe-dotnet#limits): no streaming, async only, no
