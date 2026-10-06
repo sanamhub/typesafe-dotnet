@@ -40,6 +40,9 @@ dotnet_diagnostic.CS1591.severity = none
 dotnet_diagnostic.CA1707.severity = none    # Method_DescribesBehaviour is the test naming convention
 dotnet_diagnostic.CA1515.severity = none    # test classes must be public for the runner
 dotnet_diagnostic.CA2007.severity = none    # xUnit runs tests without a SynchronizationContext to return to
+# The tests also build for net481, which lacks CancelAsync and the token overloads of ReadAs*Async.
+dotnet_diagnostic.CA1849.severity = none
+dotnet_diagnostic.CA2016.severity = none
 
 [src/**.cs]
 # Multi-targeting (ADR-0001). These rules fire on net10.0 and suggest APIs netstandard2.0 does

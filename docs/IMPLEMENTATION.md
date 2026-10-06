@@ -821,6 +821,21 @@ never reaches the stub. Check `Authorization` with `Assert.True(actual == expect
 - CA1416 for the browser attribute only fires in projects that list `browser` as a supported
   platform, so the test and packaging projects see no warning.
 
+Found while building T09 (2026-10-06):
+- `HttpClient.SendAsync` does not check an already-cancelled token before calling the handler,
+  so `Transport.SendAsync` calls `ThrowIfCancellationRequested()` first. Without it a cancelled
+  call still sends.
+- The core csproj lists `<SupportedPlatform Include="browser" />`; without it CA1418 rejects
+  `UnsupportedOSPlatform("browser")` on `netstandard2.0`.
+- Two suppressions, each with its reason in the code: RS0026 on the `SystemOneAsync` overloads
+  (the shapes in PLAN.md section 3.1 are deliberate), and CA2016 on `ReadAsByteArrayAsync()`
+  (no token overload on `netstandard2.0`).
+- The tests also build for `net481`, so `.editorconfig` turns off CA1849 and CA2016 under
+  `tests/`. xUnit1051 is on: pass `TestContext.Current.CancellationToken` to every call that
+  takes a token.
+- `StubHandler.WaitForRequestAsync` counts requests with a semaphore. A one-shot signal swapped
+  per request races: the request often arrives before the test starts waiting.
+
 ## T10 Packaging consumers
 
 **Goal.** Prove the packed packages work for an AOT app and a C# 7.3 .NET Framework app, on

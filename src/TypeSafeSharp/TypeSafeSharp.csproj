@@ -20,6 +20,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Lets CA1418 accept [UnsupportedOSPlatform("browser")] on netstandard2.0, which lists no platforms. -->
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Without it pack fails with NU5039. -->
     <None Include="PACKAGE.md" Pack="true" PackagePath="\" />
   </ItemGroup>
