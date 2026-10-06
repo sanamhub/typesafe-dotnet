@@ -1,4 +1,1 @@
 #nullable enable
-static TypeSafeSharp.TypeSafeServiceCollectionExtensions.AddTypeSafe(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, Microsoft.Extensions.Configuration.IConfiguration! configuration) -> Microsoft.Extensions.DependencyInjection.IHttpClientBuilder!
-static TypeSafeSharp.TypeSafeServiceCollectionExtensions.AddTypeSafe(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Action<TypeSafeSharp.TypeSafeClientOptions!>! configure) -> Microsoft.Extensions.DependencyInjection.IHttpClientBuilder!
-TypeSafeSharp.TypeSafeServiceCollectionExtensions

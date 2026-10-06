@@ -5,9 +5,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
-## [0.1.0-alpha.1] - 2026-10-06
+## [0.1.0] - 2026-10-06
 
-First release. Checked against API 0.2.0, `typesafe-sdk-js` 0.6.0 and `typesafe-sdk-python` 0.7.2.
+First stable release, same surface as the `0.1.0-alpha.1` prerelease. Checked against API
+0.2.0, `typesafe-sdk-js` 0.6.0 and `typesafe-sdk-python` 0.7.2.
 
 ### Added
 

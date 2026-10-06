@@ -1,1 +1,202 @@
 #nullable enable
+abstract TypeSafeSharp.Answer.Type.get -> string!
+abstract TypeSafeSharp.Question.Type.get -> string!
+override TypeSafeSharp.ChoiceAnswer.Type.get -> string!
+override TypeSafeSharp.ChoiceQuestion.Type.get -> string!
+override TypeSafeSharp.NoulAnswer.Type.get -> string!
+override TypeSafeSharp.NoulQuestion.Type.get -> string!
+override TypeSafeSharp.ScoreAnswer.Type.get -> string!
+override TypeSafeSharp.ScoreQuestion.Type.get -> string!
+override TypeSafeSharp.TypeSafeClientOptions.ToString() -> string!
+override TypeSafeSharp.UnknownAnswer.Type.get -> string!
+static TypeSafeSharp.Question.Choice(System.Text.Json.Nodes.JsonNode? instructions, params string![]! options) -> TypeSafeSharp.ChoiceQuestion!
+static TypeSafeSharp.Question.Choice(System.Text.Json.Nodes.JsonNode? instructions, System.Collections.Generic.IReadOnlyDictionary<string!, System.Text.Json.Nodes.JsonNode?>! options) -> TypeSafeSharp.ChoiceQuestion!
+static TypeSafeSharp.Question.FromJson(System.Text.Json.Nodes.JsonObject! question) -> TypeSafeSharp.Question!
+static TypeSafeSharp.Question.Noul(System.Text.Json.Nodes.JsonNode? instructions, System.Text.Json.Nodes.JsonNode? whenTrue = null, System.Text.Json.Nodes.JsonNode? whenFalse = null) -> TypeSafeSharp.NoulQuestion!
+static TypeSafeSharp.Question.Score(System.Text.Json.Nodes.JsonNode? instructions, params System.Text.Json.Nodes.JsonNode![]! levels) -> TypeSafeSharp.ScoreQuestion!
+static TypeSafeSharp.RetryPolicy.Default.get -> TypeSafeSharp.RetryPolicy!
+static TypeSafeSharp.RetryPolicy.None.get -> TypeSafeSharp.RetryPolicy!
+static TypeSafeSharp.TypeSafeModelFactory.ApiException(int statusCode, string? message = null, string? requestId = null, System.TimeSpan? retryAfter = null) -> TypeSafeSharp.TypeSafeApiException!
+static TypeSafeSharp.TypeSafeModelFactory.ChoiceAnswer(string! choice, double confidence, System.Collections.Generic.IReadOnlyDictionary<string!, double>! probabilities) -> TypeSafeSharp.ChoiceAnswer!
+static TypeSafeSharp.TypeSafeModelFactory.ModelCard(string! name, string! description, string! releaseDate) -> TypeSafeSharp.ModelCard!
+static TypeSafeSharp.TypeSafeModelFactory.NoulAnswer(double noul) -> TypeSafeSharp.NoulAnswer!
+static TypeSafeSharp.TypeSafeModelFactory.ScoreAnswer(double score, double confidence, System.Collections.Generic.IReadOnlyDictionary<int, System.Text.Json.JsonElement>! legend, System.Collections.Generic.IReadOnlyDictionary<int, double>! probabilities) -> TypeSafeSharp.ScoreAnswer!
+static TypeSafeSharp.TypeSafeModelFactory.SystemOneResponse(string! model, System.Collections.Generic.IReadOnlyDictionary<string!, TypeSafeSharp.Answer!>! answers, TypeSafeSharp.Usage! usage, string? requestId = null) -> TypeSafeSharp.SystemOneResponse!
+static TypeSafeSharp.TypeSafeModelFactory.UnknownAnswer(string! type, System.Text.Json.JsonElement raw) -> TypeSafeSharp.UnknownAnswer!
+static TypeSafeSharp.TypeSafeModelFactory.Usage(long inputTokens, long outputTokens) -> TypeSafeSharp.Usage!
+TypeSafeSharp.Answer
+TypeSafeSharp.BatchItem<TItem>
+TypeSafeSharp.BatchItem<TItem>.Elapsed.get -> System.TimeSpan
+TypeSafeSharp.BatchItem<TItem>.Exception.get -> System.Exception?
+TypeSafeSharp.BatchItem<TItem>.Index.get -> int
+TypeSafeSharp.BatchItem<TItem>.Item.get -> TItem
+TypeSafeSharp.BatchItem<TItem>.Response.get -> TypeSafeSharp.SystemOneResponse?
+TypeSafeSharp.BatchItem<TItem>.Succeeded.get -> bool
+TypeSafeSharp.BatchOptions
+TypeSafeSharp.BatchOptions.BatchOptions() -> void
+TypeSafeSharp.BatchOptions.MaxConcurrency.get -> int
+TypeSafeSharp.BatchOptions.MaxConcurrency.set -> void
+TypeSafeSharp.BatchOptions.RequestOptions.get -> TypeSafeSharp.TypeSafeRequestOptions?
+TypeSafeSharp.BatchOptions.RequestOptions.set -> void
+TypeSafeSharp.ChoiceAnswer
+TypeSafeSharp.ChoiceAnswer.Choice.get -> string!
+TypeSafeSharp.ChoiceAnswer.Confidence.get -> double
+TypeSafeSharp.ChoiceAnswer.Probabilities.get -> System.Collections.Generic.IReadOnlyDictionary<string!, double>!
+TypeSafeSharp.ChoiceQuestion
+TypeSafeSharp.ChoiceQuestion.Options.get -> System.Collections.Generic.IReadOnlyDictionary<string!, System.Text.Json.Nodes.JsonNode?>!
+TypeSafeSharp.ModelCard
+TypeSafeSharp.ModelCard.Description.get -> string!
+TypeSafeSharp.ModelCard.Name.get -> string!
+TypeSafeSharp.ModelCard.ReleaseDate.get -> string!
+TypeSafeSharp.ModelsClient
+TypeSafeSharp.ModelsClient.ModelsClient() -> void
+TypeSafeSharp.NoulAnswer
+TypeSafeSharp.NoulAnswer.Noul.get -> double
+TypeSafeSharp.NoulQuestion
+TypeSafeSharp.NoulQuestion.WhenFalse.get -> System.Text.Json.Nodes.JsonNode?
+TypeSafeSharp.NoulQuestion.WhenTrue.get -> System.Text.Json.Nodes.JsonNode?
+TypeSafeSharp.Question
+TypeSafeSharp.Question.Instructions.get -> System.Text.Json.Nodes.JsonNode?
+TypeSafeSharp.RetryPolicy
+TypeSafeSharp.RetryPolicy.MaxRetries.get -> int
+TypeSafeSharp.RetryPolicy.MaxRetries.set -> void
+TypeSafeSharp.RetryPolicy.RetryOnTimeout.get -> bool
+TypeSafeSharp.RetryPolicy.RetryOnTimeout.set -> void
+TypeSafeSharp.RetryPolicy.RetryPolicy() -> void
+TypeSafeSharp.ScoreAnswer
+TypeSafeSharp.ScoreAnswer.Confidence.get -> double
+TypeSafeSharp.ScoreAnswer.Legend.get -> System.Collections.Generic.IReadOnlyDictionary<int, System.Text.Json.JsonElement>!
+TypeSafeSharp.ScoreAnswer.MostLikelyLevel.get -> int
+TypeSafeSharp.ScoreAnswer.Probabilities.get -> System.Collections.Generic.IReadOnlyDictionary<int, double>!
+TypeSafeSharp.ScoreAnswer.Score.get -> double
+TypeSafeSharp.ScoreQuestion
+TypeSafeSharp.ScoreQuestion.Levels.get -> System.Collections.Generic.IReadOnlyList<System.Text.Json.Nodes.JsonNode!>!
+TypeSafeSharp.SystemOneRequest
+TypeSafeSharp.SystemOneRequest.ExtraBody.get -> System.Text.Json.Nodes.JsonObject?
+TypeSafeSharp.SystemOneRequest.ExtraBody.set -> void
+TypeSafeSharp.SystemOneRequest.Model.get -> string?
+TypeSafeSharp.SystemOneRequest.Model.set -> void
+TypeSafeSharp.SystemOneRequest.Questions.get -> System.Collections.Generic.IReadOnlyDictionary<string!, TypeSafeSharp.Question!>!
+TypeSafeSharp.SystemOneRequest.State.get -> System.Text.Json.Nodes.JsonNode!
+TypeSafeSharp.SystemOneRequest.SystemOneRequest(System.Text.Json.Nodes.JsonNode! state, System.Collections.Generic.IReadOnlyDictionary<string!, TypeSafeSharp.Question!>! questions) -> void
+TypeSafeSharp.SystemOneResponse
+TypeSafeSharp.SystemOneResponse.Answers.get -> System.Collections.Generic.IReadOnlyDictionary<string!, TypeSafeSharp.Answer!>!
+TypeSafeSharp.SystemOneResponse.GetChoice(string! questionId) -> TypeSafeSharp.ChoiceAnswer!
+TypeSafeSharp.SystemOneResponse.GetNoul(string! questionId) -> TypeSafeSharp.NoulAnswer!
+TypeSafeSharp.SystemOneResponse.GetScore(string! questionId) -> TypeSafeSharp.ScoreAnswer!
+TypeSafeSharp.SystemOneResponse.Model.get -> string!
+TypeSafeSharp.SystemOneResponse.RequestId.get -> string?
+TypeSafeSharp.SystemOneResponse.Usage.get -> TypeSafeSharp.Usage!
+TypeSafeSharp.TypeSafeApiException
+TypeSafeSharp.TypeSafeApiException.Body.get -> string?
+TypeSafeSharp.TypeSafeApiException.Endpoint.get -> string!
+TypeSafeSharp.TypeSafeApiException.Headers.get -> System.Collections.Generic.IReadOnlyDictionary<string!, System.Collections.Generic.IReadOnlyList<string!>!>!
+TypeSafeSharp.TypeSafeApiException.RequestId.get -> string?
+TypeSafeSharp.TypeSafeApiException.StatusCode.get -> System.Net.HttpStatusCode
+TypeSafeSharp.TypeSafeApiException.TypeSafeApiException() -> void
+TypeSafeSharp.TypeSafeApiException.TypeSafeApiException(string! message) -> void
+TypeSafeSharp.TypeSafeApiException.TypeSafeApiException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeAuthenticationException
+TypeSafeSharp.TypeSafeAuthenticationException.TypeSafeAuthenticationException() -> void
+TypeSafeSharp.TypeSafeAuthenticationException.TypeSafeAuthenticationException(string! message) -> void
+TypeSafeSharp.TypeSafeAuthenticationException.TypeSafeAuthenticationException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeBadRequestException
+TypeSafeSharp.TypeSafeBadRequestException.TypeSafeBadRequestException() -> void
+TypeSafeSharp.TypeSafeBadRequestException.TypeSafeBadRequestException(string! message) -> void
+TypeSafeSharp.TypeSafeBadRequestException.TypeSafeBadRequestException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeClient
+TypeSafeSharp.TypeSafeClient.Dispose() -> void
+TypeSafeSharp.TypeSafeClient.EvaluateManyAsync<TItem>(System.Collections.Generic.IEnumerable<TItem>! items, System.Func<TItem, TypeSafeSharp.SystemOneRequest!>! createRequest, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<TypeSafeSharp.BatchItem<TItem>!>!
+TypeSafeSharp.TypeSafeClient.EvaluateManyAsync<TItem>(System.Collections.Generic.IEnumerable<TItem>! items, System.Func<TItem, TypeSafeSharp.SystemOneRequest!>! createRequest, TypeSafeSharp.BatchOptions? options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<TypeSafeSharp.BatchItem<TItem>!>!
+TypeSafeSharp.TypeSafeClient.SystemOneAsync(System.Text.Json.Nodes.JsonNode! state, System.Collections.Generic.IReadOnlyDictionary<string!, TypeSafeSharp.Question!>! questions, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<TypeSafeSharp.SystemOneResponse!>!
+TypeSafeSharp.TypeSafeClient.SystemOneAsync(TypeSafeSharp.SystemOneRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<TypeSafeSharp.SystemOneResponse!>!
+TypeSafeSharp.TypeSafeClient.TypeSafeClient() -> void
+TypeSafeSharp.TypeSafeClient.TypeSafeClient(string! apiKey) -> void
+TypeSafeSharp.TypeSafeClient.TypeSafeClient(System.Net.Http.HttpClient! httpClient, TypeSafeSharp.TypeSafeClientOptions! options) -> void
+TypeSafeSharp.TypeSafeClient.TypeSafeClient(TypeSafeSharp.TypeSafeClientOptions! options) -> void
+TypeSafeSharp.TypeSafeClientOptions
+TypeSafeSharp.TypeSafeClientOptions.ApiKey.get -> string?
+TypeSafeSharp.TypeSafeClientOptions.ApiKey.set -> void
+TypeSafeSharp.TypeSafeClientOptions.AttemptTimeout.get -> System.TimeSpan
+TypeSafeSharp.TypeSafeClientOptions.AttemptTimeout.set -> void
+TypeSafeSharp.TypeSafeClientOptions.BaseUrl.get -> System.Uri?
+TypeSafeSharp.TypeSafeClientOptions.BaseUrl.set -> void
+TypeSafeSharp.TypeSafeClientOptions.DefaultModel.get -> string?
+TypeSafeSharp.TypeSafeClientOptions.DefaultModel.set -> void
+TypeSafeSharp.TypeSafeClientOptions.LoggerFactory.get -> Microsoft.Extensions.Logging.ILoggerFactory?
+TypeSafeSharp.TypeSafeClientOptions.LoggerFactory.set -> void
+TypeSafeSharp.TypeSafeClientOptions.Retry.get -> TypeSafeSharp.RetryPolicy!
+TypeSafeSharp.TypeSafeClientOptions.Retry.set -> void
+TypeSafeSharp.TypeSafeClientOptions.TotalTimeout.get -> System.TimeSpan
+TypeSafeSharp.TypeSafeClientOptions.TotalTimeout.set -> void
+TypeSafeSharp.TypeSafeClientOptions.TypeSafeClientOptions() -> void
+TypeSafeSharp.TypeSafeConfigurationException
+TypeSafeSharp.TypeSafeConfigurationException.TypeSafeConfigurationException() -> void
+TypeSafeSharp.TypeSafeConfigurationException.TypeSafeConfigurationException(string! message) -> void
+TypeSafeSharp.TypeSafeConfigurationException.TypeSafeConfigurationException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeConnectionException
+TypeSafeSharp.TypeSafeConnectionException.TypeSafeConnectionException() -> void
+TypeSafeSharp.TypeSafeConnectionException.TypeSafeConnectionException(string! message) -> void
+TypeSafeSharp.TypeSafeConnectionException.TypeSafeConnectionException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeException
+TypeSafeSharp.TypeSafeException.TypeSafeException() -> void
+TypeSafeSharp.TypeSafeException.TypeSafeException(string! message) -> void
+TypeSafeSharp.TypeSafeException.TypeSafeException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeInternalServerException
+TypeSafeSharp.TypeSafeInternalServerException.TypeSafeInternalServerException() -> void
+TypeSafeSharp.TypeSafeInternalServerException.TypeSafeInternalServerException(string! message) -> void
+TypeSafeSharp.TypeSafeInternalServerException.TypeSafeInternalServerException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeModelFactory
+TypeSafeSharp.TypeSafeNotFoundException
+TypeSafeSharp.TypeSafeNotFoundException.TypeSafeNotFoundException() -> void
+TypeSafeSharp.TypeSafeNotFoundException.TypeSafeNotFoundException(string! message) -> void
+TypeSafeSharp.TypeSafeNotFoundException.TypeSafeNotFoundException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeOverloadedException
+TypeSafeSharp.TypeSafeOverloadedException.TypeSafeOverloadedException() -> void
+TypeSafeSharp.TypeSafeOverloadedException.TypeSafeOverloadedException(string! message) -> void
+TypeSafeSharp.TypeSafeOverloadedException.TypeSafeOverloadedException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafePermissionDeniedException
+TypeSafeSharp.TypeSafePermissionDeniedException.TypeSafePermissionDeniedException() -> void
+TypeSafeSharp.TypeSafePermissionDeniedException.TypeSafePermissionDeniedException(string! message) -> void
+TypeSafeSharp.TypeSafePermissionDeniedException.TypeSafePermissionDeniedException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeRateLimitException
+TypeSafeSharp.TypeSafeRateLimitException.RetryAfter.get -> System.TimeSpan?
+TypeSafeSharp.TypeSafeRateLimitException.TypeSafeRateLimitException() -> void
+TypeSafeSharp.TypeSafeRateLimitException.TypeSafeRateLimitException(string! message) -> void
+TypeSafeSharp.TypeSafeRateLimitException.TypeSafeRateLimitException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeRequestOptions
+TypeSafeSharp.TypeSafeRequestOptions.AttemptTimeout.get -> System.TimeSpan?
+TypeSafeSharp.TypeSafeRequestOptions.AttemptTimeout.set -> void
+TypeSafeSharp.TypeSafeRequestOptions.Retry.get -> TypeSafeSharp.RetryPolicy?
+TypeSafeSharp.TypeSafeRequestOptions.Retry.set -> void
+TypeSafeSharp.TypeSafeRequestOptions.TotalTimeout.get -> System.TimeSpan?
+TypeSafeSharp.TypeSafeRequestOptions.TotalTimeout.set -> void
+TypeSafeSharp.TypeSafeRequestOptions.TypeSafeRequestOptions() -> void
+TypeSafeSharp.TypeSafeResponseValidationException
+TypeSafeSharp.TypeSafeResponseValidationException.JsonPath.get -> string?
+TypeSafeSharp.TypeSafeResponseValidationException.TypeSafeResponseValidationException() -> void
+TypeSafeSharp.TypeSafeResponseValidationException.TypeSafeResponseValidationException(string! message) -> void
+TypeSafeSharp.TypeSafeResponseValidationException.TypeSafeResponseValidationException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeTimeoutException
+TypeSafeSharp.TypeSafeTimeoutException.Timeout.get -> System.TimeSpan
+TypeSafeSharp.TypeSafeTimeoutException.TypeSafeTimeoutException() -> void
+TypeSafeSharp.TypeSafeTimeoutException.TypeSafeTimeoutException(string! message) -> void
+TypeSafeSharp.TypeSafeTimeoutException.TypeSafeTimeoutException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeUnprocessableEntityException
+TypeSafeSharp.TypeSafeUnprocessableEntityException.TypeSafeUnprocessableEntityException() -> void
+TypeSafeSharp.TypeSafeUnprocessableEntityException.TypeSafeUnprocessableEntityException(string! message) -> void
+TypeSafeSharp.TypeSafeUnprocessableEntityException.TypeSafeUnprocessableEntityException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeUnprocessableEntityException.ValidationErrors.get -> System.Collections.Generic.IReadOnlyList<TypeSafeSharp.ValidationError!>!
+TypeSafeSharp.UnknownAnswer
+TypeSafeSharp.UnknownAnswer.Raw.get -> System.Text.Json.JsonElement
+TypeSafeSharp.Usage
+TypeSafeSharp.Usage.InputTokens.get -> long
+TypeSafeSharp.Usage.OutputTokens.get -> long
+TypeSafeSharp.ValidationError
+TypeSafeSharp.ValidationError.Location.get -> System.Collections.Generic.IReadOnlyList<string!>!
+TypeSafeSharp.ValidationError.Message.get -> string!
+TypeSafeSharp.ValidationError.Type.get -> string!
+virtual TypeSafeSharp.ModelsClient.ListAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<TypeSafeSharp.ModelCard!>!>!
+virtual TypeSafeSharp.TypeSafeClient.Dispose(bool disposing) -> void
+virtual TypeSafeSharp.TypeSafeClient.Models.get -> TypeSafeSharp.ModelsClient!
+virtual TypeSafeSharp.TypeSafeClient.SystemOneAsync(TypeSafeSharp.SystemOneRequest! request, TypeSafeSharp.TypeSafeRequestOptions? options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<TypeSafeSharp.SystemOneResponse!>!
