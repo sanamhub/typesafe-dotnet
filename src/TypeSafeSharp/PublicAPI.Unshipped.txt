@@ -7,12 +7,15 @@ override TypeSafeSharp.NoulAnswer.Type.get -> string!
 override TypeSafeSharp.NoulQuestion.Type.get -> string!
 override TypeSafeSharp.ScoreAnswer.Type.get -> string!
 override TypeSafeSharp.ScoreQuestion.Type.get -> string!
+override TypeSafeSharp.TypeSafeClientOptions.ToString() -> string!
 override TypeSafeSharp.UnknownAnswer.Type.get -> string!
 static TypeSafeSharp.Question.Choice(System.Text.Json.Nodes.JsonNode? instructions, params string![]! options) -> TypeSafeSharp.ChoiceQuestion!
 static TypeSafeSharp.Question.Choice(System.Text.Json.Nodes.JsonNode? instructions, System.Collections.Generic.IReadOnlyDictionary<string!, System.Text.Json.Nodes.JsonNode?>! options) -> TypeSafeSharp.ChoiceQuestion!
 static TypeSafeSharp.Question.FromJson(System.Text.Json.Nodes.JsonObject! question) -> TypeSafeSharp.Question!
 static TypeSafeSharp.Question.Noul(System.Text.Json.Nodes.JsonNode? instructions, System.Text.Json.Nodes.JsonNode? whenTrue = null, System.Text.Json.Nodes.JsonNode? whenFalse = null) -> TypeSafeSharp.NoulQuestion!
 static TypeSafeSharp.Question.Score(System.Text.Json.Nodes.JsonNode? instructions, params System.Text.Json.Nodes.JsonNode![]! levels) -> TypeSafeSharp.ScoreQuestion!
+static TypeSafeSharp.RetryPolicy.Default.get -> TypeSafeSharp.RetryPolicy!
+static TypeSafeSharp.RetryPolicy.None.get -> TypeSafeSharp.RetryPolicy!
 static TypeSafeSharp.TypeSafeModelFactory.ApiException(int statusCode, string? message = null, string? requestId = null, System.TimeSpan? retryAfter = null) -> TypeSafeSharp.TypeSafeApiException!
 static TypeSafeSharp.TypeSafeModelFactory.ChoiceAnswer(string! choice, double confidence, System.Collections.Generic.IReadOnlyDictionary<string!, double>! probabilities) -> TypeSafeSharp.ChoiceAnswer!
 static TypeSafeSharp.TypeSafeModelFactory.ModelCard(string! name, string! description, string! releaseDate) -> TypeSafeSharp.ModelCard!
@@ -39,6 +42,12 @@ TypeSafeSharp.NoulQuestion.WhenFalse.get -> System.Text.Json.Nodes.JsonNode?
 TypeSafeSharp.NoulQuestion.WhenTrue.get -> System.Text.Json.Nodes.JsonNode?
 TypeSafeSharp.Question
 TypeSafeSharp.Question.Instructions.get -> System.Text.Json.Nodes.JsonNode?
+TypeSafeSharp.RetryPolicy
+TypeSafeSharp.RetryPolicy.MaxRetries.get -> int
+TypeSafeSharp.RetryPolicy.MaxRetries.set -> void
+TypeSafeSharp.RetryPolicy.RetryOnTimeout.get -> bool
+TypeSafeSharp.RetryPolicy.RetryOnTimeout.set -> void
+TypeSafeSharp.RetryPolicy.RetryPolicy() -> void
 TypeSafeSharp.ScoreAnswer
 TypeSafeSharp.ScoreAnswer.Confidence.get -> double
 TypeSafeSharp.ScoreAnswer.Legend.get -> System.Collections.Generic.IReadOnlyDictionary<int, System.Text.Json.JsonElement>!
@@ -81,6 +90,20 @@ TypeSafeSharp.TypeSafeBadRequestException.TypeSafeBadRequestException() -> void
 TypeSafeSharp.TypeSafeBadRequestException.TypeSafeBadRequestException(string! message) -> void
 TypeSafeSharp.TypeSafeBadRequestException.TypeSafeBadRequestException(string! message, System.Exception! innerException) -> void
 TypeSafeSharp.TypeSafeClientOptions
+TypeSafeSharp.TypeSafeClientOptions.ApiKey.get -> string?
+TypeSafeSharp.TypeSafeClientOptions.ApiKey.set -> void
+TypeSafeSharp.TypeSafeClientOptions.AttemptTimeout.get -> System.TimeSpan
+TypeSafeSharp.TypeSafeClientOptions.AttemptTimeout.set -> void
+TypeSafeSharp.TypeSafeClientOptions.BaseUrl.get -> System.Uri?
+TypeSafeSharp.TypeSafeClientOptions.BaseUrl.set -> void
+TypeSafeSharp.TypeSafeClientOptions.DefaultModel.get -> string?
+TypeSafeSharp.TypeSafeClientOptions.DefaultModel.set -> void
+TypeSafeSharp.TypeSafeClientOptions.LoggerFactory.get -> Microsoft.Extensions.Logging.ILoggerFactory?
+TypeSafeSharp.TypeSafeClientOptions.LoggerFactory.set -> void
+TypeSafeSharp.TypeSafeClientOptions.Retry.get -> TypeSafeSharp.RetryPolicy!
+TypeSafeSharp.TypeSafeClientOptions.Retry.set -> void
+TypeSafeSharp.TypeSafeClientOptions.TotalTimeout.get -> System.TimeSpan
+TypeSafeSharp.TypeSafeClientOptions.TotalTimeout.set -> void
 TypeSafeSharp.TypeSafeClientOptions.TypeSafeClientOptions() -> void
 TypeSafeSharp.TypeSafeConfigurationException
 TypeSafeSharp.TypeSafeConfigurationException.TypeSafeConfigurationException() -> void
@@ -116,6 +139,14 @@ TypeSafeSharp.TypeSafeRateLimitException.RetryAfter.get -> System.TimeSpan?
 TypeSafeSharp.TypeSafeRateLimitException.TypeSafeRateLimitException() -> void
 TypeSafeSharp.TypeSafeRateLimitException.TypeSafeRateLimitException(string! message) -> void
 TypeSafeSharp.TypeSafeRateLimitException.TypeSafeRateLimitException(string! message, System.Exception! innerException) -> void
+TypeSafeSharp.TypeSafeRequestOptions
+TypeSafeSharp.TypeSafeRequestOptions.AttemptTimeout.get -> System.TimeSpan?
+TypeSafeSharp.TypeSafeRequestOptions.AttemptTimeout.set -> void
+TypeSafeSharp.TypeSafeRequestOptions.Retry.get -> TypeSafeSharp.RetryPolicy?
+TypeSafeSharp.TypeSafeRequestOptions.Retry.set -> void
+TypeSafeSharp.TypeSafeRequestOptions.TotalTimeout.get -> System.TimeSpan?
+TypeSafeSharp.TypeSafeRequestOptions.TotalTimeout.set -> void
+TypeSafeSharp.TypeSafeRequestOptions.TypeSafeRequestOptions() -> void
 TypeSafeSharp.TypeSafeResponseValidationException
 TypeSafeSharp.TypeSafeResponseValidationException.JsonPath.get -> string?
 TypeSafeSharp.TypeSafeResponseValidationException.TypeSafeResponseValidationException() -> void
