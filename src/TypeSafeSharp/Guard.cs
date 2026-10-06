@@ -15,5 +15,5 @@ internal static class Guard
     public static TimeSpan Positive(TimeSpan value, [CallerArgumentExpression(nameof(value))] string? name = null)
         => value > TimeSpan.Zero && value.TotalMilliseconds <= int.MaxValue
             ? value
-            : throw new ArgumentOutOfRangeException(name, value, "Must be greater than zero and at most 24 days.");
+            : throw new ArgumentOutOfRangeException(name, value, "Must be greater than zero and at most 24.86 days.");
 }

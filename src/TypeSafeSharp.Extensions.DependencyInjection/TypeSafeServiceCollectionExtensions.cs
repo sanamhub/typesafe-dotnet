@@ -51,8 +51,11 @@ public static class TypeSafeServiceCollectionExtensions
 
     private static IHttpClientBuilder Register(IServiceCollection services, OptionsBuilder<TypeSafeClientOptions> options)
     {
-        // At host start, not at Build(), so a missing key stops the app before the first request.
-        options.Validate(HasKey, MissingKey).ValidateOnStart();
+        // At host start, not at Build(), so a missing or malformed key stops the app before the
+        // first request. A custom validator keeps ApiKey.Validate's specific message (whitespace
+        // inside, control character, non-ASCII), which never echoes the key (ADR-0008).
+        services.AddSingleton<IValidateOptions<TypeSafeClientOptions>>(new ApiKeyValidator());
+        options.ValidateOnStart();
 
         services.AddSingleton(provider =>
         {
@@ -69,23 +72,27 @@ public static class TypeSafeServiceCollectionExtensions
             .ConfigureHttpClient(client => client.Timeout = Timeout.InfiniteTimeSpan);
     }
 
-    private static bool HasKey(TypeSafeClientOptions options)
+    // OptionsBuilder.Validate takes a fixed failure string, so it would collapse ApiKey.Validate's
+    // specific message into MissingKey. A validator returns the message ApiKey.Validate produced.
+    private sealed class ApiKeyValidator : IValidateOptions<TypeSafeClientOptions>
     {
-        var key = options.ApiKey ?? Environment.GetEnvironmentVariable(ApiKey.EnvironmentVariable);
-        if (key is null)
+        public ValidateOptionsResult Validate(string? name, TypeSafeClientOptions options)
         {
-            return false;
-        }
+            var key = options.ApiKey ?? Environment.GetEnvironmentVariable(ApiKey.EnvironmentVariable);
+            if (key is null)
+            {
+                return ValidateOptionsResult.Fail(MissingKey);
+            }
 
-        try
-        {
-            ApiKey.Validate(key);
-            return true;
-        }
-        catch (TypeSafeConfigurationException)
-        {
-            // The validation message is fixed and never names the key.
-            return false;
+            try
+            {
+                ApiKey.Validate(key);
+                return ValidateOptionsResult.Success;
+            }
+            catch (TypeSafeConfigurationException ex)
+            {
+                return ValidateOptionsResult.Fail(ex.Message);
+            }
         }
     }
 

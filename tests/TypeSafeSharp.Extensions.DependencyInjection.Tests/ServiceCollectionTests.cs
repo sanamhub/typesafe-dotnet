@@ -78,6 +78,7 @@ public sealed class ServiceCollectionTests : IDisposable
         var ex = await Assert.ThrowsAsync<OptionsValidationException>(() => host.StartAsync(Ct));
 
         Assert.DoesNotContain("ZZZZ", ex.Message, StringComparison.Ordinal);
+        Assert.Contains("whitespace", ex.Message, StringComparison.Ordinal);
     }
 
     [Fact]

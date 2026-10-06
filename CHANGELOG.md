@@ -5,6 +5,12 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- `AddTypeSafe` now reports the specific key problem at host start (whitespace inside the key, a
+  control character, or a non-ASCII character) instead of the generic missing-key message.
+- The invalid-timeout message now says "at most 24.86 days" instead of the rounded "24 days".
+
 ## [0.1.0] - 2026-10-06
 
 First stable release, same surface as the `0.1.0-alpha.1` prerelease. Checked against API

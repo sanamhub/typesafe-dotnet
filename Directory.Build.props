@@ -32,7 +32,7 @@
   <PropertyGroup Label="Version">
     <!-- One version for both packages (ADR-0011). AssemblyVersion carries the major only, so a
          binding redirect is needed once per major, not once per release (ADR-0013). -->
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <AssemblyVersion>0.0.0.0</AssemblyVersion>
   </PropertyGroup>
 
