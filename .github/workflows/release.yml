@@ -1,0 +1,199 @@
+name: release
+
+# Packs once, consumes the packages from clean projects, then publishes exactly those files.
+# A workflow_dispatch run is always a dry run: it stops after verify (ADR-0011).
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  DOTNET_NOLOGO: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 'true'
+  CI: 'true'
+
+jobs:
+  preflight:
+    # Seconds, and first: a release that fails should fail before anyone approves a deployment.
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: read the version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(grep -oPm1 '(?<=<Version>)[^<]+' Directory.Build.props)"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Directory.Build.props says $version"
+
+      - name: the tag, the version and the changelog must agree
+        shell: bash
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_EVENT_NAME" = "push" ] && [ "${GITHUB_REF_NAME#v}" != "$VERSION" ]; then
+            echo "::error::tag says ${GITHUB_REF_NAME#v}, Directory.Build.props says $VERSION. Pushing this tag would publish the wrong version."
+            exit 1
+          fi
+          ./scripts/changelog-section.sh "$VERSION" > /dev/null
+          echo "CHANGELOG.md has a section for $VERSION"
+
+      - name: the public API must be shipped
+        # A prerelease may still change the API; it moves to Shipped at the first stable release.
+        if: ${{ !contains(steps.version.outputs.version, '-') }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in src/*/PublicAPI.Unshipped.txt; do
+            if grep -qv '^#nullable enable$' "$file"; then
+              echo "::error::$file is not empty. Move its entries to PublicAPI.Shipped.txt before a stable release."
+              exit 1
+            fi
+          done
+
+  verify:
+    needs: preflight
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+
+      - name: pack
+        run: dotnet pack TypeSafeSharp.slnx -c Release -o out
+
+      - name: both packages carry the version
+        shell: bash
+        env:
+          VERSION: ${{ needs.preflight.outputs.version }}
+        run: |
+          set -euo pipefail
+          for id in TypeSafeSharp TypeSafeSharp.Extensions.DependencyInjection; do
+            test -f "out/$id.$VERSION.nupkg" || { echo "::error::out/$id.$VERSION.nupkg is missing"; ls out; exit 1; }
+            test -f "out/$id.$VERSION.snupkg" || { echo "::error::out/$id.$VERSION.snupkg is missing"; ls out; exit 1; }
+          done
+
+      - name: consume with NativeAOT (console and web)
+        shell: bash
+        run: tests/packaging/verify-package.sh --packages out
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: packages
+          path: out
+          retention-days: 30
+
+  verify-netfx:
+    needs: verify
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: packages
+          path: out
+      - name: consume on .NET Framework at C# 7.3
+        shell: bash
+        run: tests/packaging/verify-package.sh --packages out --consumer NetFx
+
+  publish:
+    # The whole job, not a step: environment production deploys from v* tags only, so on main
+    # it would be refused anyway. A dry run ends after verify.
+    if: github.event_name == 'push'
+    needs: [preflight, verify, verify-netfx]
+    runs-on: ubuntu-24.04
+    environment: production
+    permissions:
+      contents: write        # the GitHub release
+      id-token: write        # NuGet trusted publishing and the attestation
+      attestations: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Exactly the files verify tested. Never re-pack.
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: packages
+          path: out
+
+      # Requires a policy at nuget.org under Account, Trusted Publishing: owner sanamhub,
+      # repository typesafe-dotnet, workflow release.yml, environment production. The key it
+      # returns lives for an hour; there is no long-lived NUGET_API_KEY secret (ADR-0011).
+      - name: exchange the OIDC token for a temporary api key
+        id: login
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      # Core first: a failure must never leave the DI package on nuget.org without its dependency.
+      # Each .snupkg beside its .nupkg goes up automatically as the symbols package.
+      - name: publish to nuget.org
+        shell: bash
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+          VERSION: ${{ needs.preflight.outputs.version }}
+        run: |
+          set -euo pipefail
+          for id in TypeSafeSharp TypeSafeSharp.Extensions.DependencyInjection; do
+            dotnet nuget push "out/$id.$VERSION.nupkg" --api-key "$NUGET_API_KEY" \
+              --source https://api.nuget.org/v3/index.json --skip-duplicate
+          done
+
+      - uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          subject-path: |
+            out/TypeSafeSharp.${{ needs.preflight.outputs.version }}.nupkg
+            out/TypeSafeSharp.Extensions.DependencyInjection.${{ needs.preflight.outputs.version }}.nupkg
+
+      # Notes from CHANGELOG.md, not the commit log, so the release page and the changelog
+      # cannot say different things.
+      - name: create the GitHub release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.preflight.outputs.version }}
+        run: |
+          set -euo pipefail
+          {
+            ./scripts/changelog-section.sh "$VERSION"
+            echo
+            echo "### Install"
+            echo
+            echo '```'
+            echo "dotnet add package TypeSafeSharp --version $VERSION"
+            echo "dotnet add package TypeSafeSharp.Extensions.DependencyInjection --version $VERSION"
+            echo '```'
+            echo
+            echo "Published with NuGet trusted publishing and a build provenance attestation."
+            echo "nuget.org can take up to an hour to validate and index a new version."
+          } > release-notes.md
+          prerelease=()
+          case "$VERSION" in *-*) prerelease=(--prerelease) ;; esac
+          gh release create "$GITHUB_REF_NAME" out/*.nupkg out/*.snupkg \
+            --title "$GITHUB_REF_NAME" --notes-file release-notes.md --verify-tag "${prerelease[@]}"

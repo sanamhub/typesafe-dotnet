@@ -52,7 +52,8 @@ That triggers `release.yml`:
 | Job | What it does |
 | --- | --- |
 | `preflight` | Checks the tag, `<Version>` and changelog section agree, and `PublicAPI.Unshipped.txt` is empty. |
-| `verify` | Packs both packages once, checks both file names carry the tag version, and consumes them from the packaging projects (NativeAOT console, NativeAOT web app, `net481` at C# 7.3). Uploads the tested files. |
+| `verify` | Packs both packages once, checks both file names carry the tag version, consumes them from the NativeAOT console and web app, and uploads the tested files. |
+| `verify-netfx` | Downloads those files on Windows and consumes them from the `net481` console at C# 7.3. |
 | `publish` | Waits on the `production` environment approval, then downloads exactly the files `verify` tested, pushes the core package then the DI package, attests provenance and creates the GitHub release. |
 
 Approve the deployment on the run's page, under `publish`, `Review deployments`.
@@ -61,7 +62,7 @@ The workflow creates the GitHub release, with notes from the changelog section a
 and `.snupkg` files attached. A tag containing `-` is marked as a prerelease. Do not create a
 release by hand; that only makes a duplicate.
 
-`workflow_dispatch` is always a dry run: it stops after `verify`, before the login, the push and
+`workflow_dispatch` is always a dry run: it stops after `verify` and `verify-netfx`, before the login, the push and
 the release.
 
 ## Rolling back
