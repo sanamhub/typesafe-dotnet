@@ -72,3 +72,14 @@ jobs:
           dotnet test --project tests/TypeSafeSharp.Tests -c Release --no-build -f net10.0
           --filter-trait "Category=Live"
           --minimum-expected-tests 8
+          --report-trx --results-directory TestResults
+
+      # A failing live run must leave its report behind. A host crash can coexist with every
+      # test green, and the console summary alone does not name the test that crashed.
+      - name: upload live test results
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: live-test-results
+          path: TestResults
+          retention-days: 7
