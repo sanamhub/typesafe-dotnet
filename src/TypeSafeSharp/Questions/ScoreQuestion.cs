@@ -12,6 +12,6 @@ public sealed class ScoreQuestion : Question
     /// <inheritdoc/>
     public override string Type => "score";
 
-    /// <summary>The level descriptions, lowest first; the server numbers them from 1. Sent as <c>criteria</c>.</summary>
+    /// <summary>The level descriptions, lowest first. The answer numbers them from 0. Sent as <c>criteria</c>.</summary>
     public IReadOnlyList<JsonNode> Levels { get; }
 }

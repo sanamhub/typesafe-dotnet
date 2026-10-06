@@ -18,6 +18,14 @@ TypeSafeSharp.Question
 TypeSafeSharp.Question.Instructions.get -> System.Text.Json.Nodes.JsonNode?
 TypeSafeSharp.ScoreQuestion
 TypeSafeSharp.ScoreQuestion.Levels.get -> System.Collections.Generic.IReadOnlyList<System.Text.Json.Nodes.JsonNode!>!
+TypeSafeSharp.SystemOneRequest
+TypeSafeSharp.SystemOneRequest.ExtraBody.get -> System.Text.Json.Nodes.JsonObject?
+TypeSafeSharp.SystemOneRequest.ExtraBody.set -> void
+TypeSafeSharp.SystemOneRequest.Model.get -> string?
+TypeSafeSharp.SystemOneRequest.Model.set -> void
+TypeSafeSharp.SystemOneRequest.Questions.get -> System.Collections.Generic.IReadOnlyDictionary<string!, TypeSafeSharp.Question!>!
+TypeSafeSharp.SystemOneRequest.State.get -> System.Text.Json.Nodes.JsonNode!
+TypeSafeSharp.SystemOneRequest.SystemOneRequest(System.Text.Json.Nodes.JsonNode! state, System.Collections.Generic.IReadOnlyDictionary<string!, TypeSafeSharp.Question!>! questions) -> void
 TypeSafeSharp.TypeSafeApiException
 TypeSafeSharp.TypeSafeApiException.Body.get -> string?
 TypeSafeSharp.TypeSafeApiException.Endpoint.get -> string!
