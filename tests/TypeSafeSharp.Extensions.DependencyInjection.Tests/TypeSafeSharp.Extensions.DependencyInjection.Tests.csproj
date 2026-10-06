@@ -10,6 +10,10 @@
          code over Microsoft.Bcl.TimeProvider, which does support net462, and this leg exists to
          run the netstandard2.0 build on .NET Framework, so the warning is accepted here only. -->
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+    <!-- A leg that discovers fewer tests than this fails instead of passing empty. Raised as tasks
+         add tests. Set here, not on the command line, because arguments there reach every
+         test project and one number cannot fit both. -->
+    <TestingPlatformCommandLineArguments>--minimum-expected-tests 1</TestingPlatformCommandLineArguments>
   </PropertyGroup>
 
   <ItemGroup>

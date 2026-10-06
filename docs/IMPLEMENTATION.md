@@ -315,6 +315,12 @@ automatically.
 **Traps.** CodeQL runs through GitHub's default setup, not a workflow job. Do not add
 `continue-on-error` to `deps`; ada-csharp removed it once the Dependency graph was on (its #58).
 
+Found while building T02 (2026-10-06): with `global.json` selecting Microsoft.Testing.Platform,
+`dotnet test` takes the platform options directly, with or without `--`; `ci.yml` passes them
+directly, as ada-csharp does. `--results-directory TestResults` puts coverage files in the root
+`TestResults/`, so the summary globs `TestResults/*.cobertura.xml`, not `tests/**`. The table
+stays empty until T03 adds code with lines to cover.
+
 ## T03 Exceptions and Guard
 
 **Goal.** Every exception type from ADR-0006, and the argument guard every later task uses.
