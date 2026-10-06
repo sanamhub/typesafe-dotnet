@@ -5,11 +5,9 @@ model. For .NET teams who want the official JS and Python SDK behaviour (retries
 handling) on `netstandard2.0` and `net10.0`, with typed answers, dependency injection and
 OpenTelemetry tracing.
 
-> **Status: planning.** Nothing is implemented or published yet. This repo holds the design:
-> [docs/PLAN.md](docs/PLAN.md), the ADRs below (all proposed, awaiting approval) and
-> [docs/IMPLEMENTATION.md](docs/IMPLEMENTATION.md), the ordered task list for building it. The
-> code in this README is the planned API. It compiles against a throwaway stub of PLAN section
-> 3, not against a real package.
+> **Status: built, not yet published.** The client, the DI package and their tests are done;
+> `0.1.0` is not on nuget.org yet. The code in this README compiles against the packed packages.
+> The design is in [docs/PLAN.md](docs/PLAN.md) and the ADRs below.
 
 Not affiliated with or endorsed by TypeSafe AI. The official SDKs are
 [typesafe-sdk-js](https://github.com/typesafe-ai/typesafe-sdk-js) and
@@ -42,7 +40,46 @@ Your own types go in as `JsonNode`:
   then `(Team)Enum.Parse(typeof(Team), response.GetChoice("team").Choice)`.
 - A question shape this package does not model yet: `Question.FromJson(jsonObject)`.
 
-## Install (once published)
+## Many requests at once
+
+`EvaluateManyAsync` runs up to `MaxConcurrency` calls (default 4) and yields each result as it
+finishes, with `Index` pointing back to the input. One item's failure comes back as that item; a
+rejected key or a wrong model ends the loop, since every item would fail the same way.
+
+```csharp
+string[] tickets = ["My card was charged twice.", "The export button does nothing."];
+var question = Question.Noul("The customer needs action today");
+
+await foreach (var item in client.EvaluateManyAsync(
+    tickets,
+    ticket => new SystemOneRequest(ticket, new Dictionary<string, Question> { ["is_urgent"] = question }),
+    new BatchOptions { MaxConcurrency = 4 }))
+{
+    Console.WriteLine(item.Succeeded
+        ? $"{item.Index}: {item.Response!.GetNoul("is_urgent").Noul:P0}"
+        : $"{item.Index}: failed, {item.Exception!.Message}");
+}
+```
+
+C# 7.3 has no `await foreach`, so .NET Framework projects on the default language version walk
+the enumerator by hand:
+
+```csharp
+var batch = client.EvaluateManyAsync(tickets, ticket => new SystemOneRequest(ticket, questions)).GetAsyncEnumerator();
+try
+{
+    while (await batch.MoveNextAsync())
+    {
+        Console.WriteLine(batch.Current.Index + ": " + (batch.Current.Succeeded ? "ok" : batch.Current.Exception.Message));
+    }
+}
+finally
+{
+    await batch.DisposeAsync();
+}
+```
+
+## Install
 
 ```bash
 dotnet add package TypeSafeSharp
@@ -74,12 +111,27 @@ on the first request. For a second client (a pinned model, a gateway), register 
 
 Tracing: `.WithTracing(t => t.AddSource("TypeSafeSharp"))` on your OpenTelemetry builder.
 
+Extra headers, a proxy or your own handlers: build the `HttpClient` yourself and pass it to
+`new TypeSafeClient(httpClient, options)`, or add handlers to the builder `AddTypeSafe` returns.
+The SDK never disposes or changes a client you pass, and its own headers win over your
+`DefaultRequestHeaders` of the same name.
+
+With .NET Aspire, keep the key a secret parameter in the AppHost and hand it over as the
+environment variable the client reads:
+
+```csharp
+// fragment: AppHost project, needs Aspire.Hosting
+var key = builder.AddParameter("typesafe-key", secret: true);
+builder.AddProject<Projects.Api>("api").WithEnvironment("TYPESAFE_API_KEY", key);
+```
+
 ### Your own resilience pipeline
 
 Turn off the built-in retries and set both SDK timeouts longer than your pipeline's total, so
 the SDK does not cut it off. Needs `Microsoft.Extensions.Http.Resilience`:
 
 ```csharp
+// fragment: needs Microsoft.Extensions.Http.Resilience
 builder.Services
     .AddTypeSafe(o =>
     {
@@ -126,10 +178,10 @@ builds the exception for the failure path.
 
 | Checked against | Version |
 | --- | --- |
-| TypeSafeSharp | 0.1.0 (planned) |
+| TypeSafeSharp | 0.1.0 (unreleased) |
 | API (OpenAPI document) | 0.2.0 |
 | `typesafe-sdk-js` | 0.6.0 |
-| `typesafe-sdk-python` | 0.7.1 |
+| `typesafe-sdk-python` | 0.7.2 |
 
 Every release updates this table (see the [release runbook](docs/runbooks/release.md)). The
 feature-by-feature comparison is in
@@ -205,8 +257,8 @@ echoing it, never logs headers or bodies, and never copies request data into exc
 
 ## License
 
-MIT, once the repository is created (PLAN section 6). Behaviour ported from the MIT-licensed
-official SDKs will be credited in `THIRD-PARTY-NOTICES.txt` (ADR-0002).
+[MIT](LICENSE). Behaviour ported from the MIT-licensed official SDKs is credited in
+[THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt) (ADR-0002).
 
 ## Disclaimer
 
