@@ -9,6 +9,11 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - `AddTypeSafe` now reports the specific key problem at host start (whitespace inside the key, a
   control character, or a non-ASCII character) instead of the generic missing-key message.
+- The `AddTypeSafe` key check no longer runs on `TypeSafeClientOptions` the app registers under
+  another name, or unnamed. Before, reading `IOptions<TypeSafeClientOptions>` without a key threw
+  `OptionsValidationException`.
+- A blank `TYPESAFE_API_KEY` now fails at host start with the missing-key message, as the client
+  constructor does, instead of "The API key is empty."
 - The invalid-timeout message now says "at most 24.86 days" instead of the rounded "24 days".
 
 ## [0.1.0] - 2026-10-06

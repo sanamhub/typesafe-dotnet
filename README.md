@@ -203,7 +203,7 @@ builds the exception for the failure path.
 
 | Checked against | Version |
 | --- | --- |
-| TypeSafeSharp | 0.1.0-alpha.1 |
+| TypeSafeSharp | 0.1.0 |
 | API (OpenAPI document) | 0.2.0 |
 | `typesafe-sdk-js` | 0.6.0 |
 | `typesafe-sdk-python` | 0.7.2 |

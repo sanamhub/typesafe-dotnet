@@ -78,10 +78,25 @@ public static class TypeSafeServiceCollectionExtensions
     {
         public ValidateOptionsResult Validate(string? name, TypeSafeClientOptions options)
         {
-            var key = options.ApiKey ?? Environment.GetEnvironmentVariable(ApiKey.EnvironmentVariable);
+            // Registered for the options type, so it also sees options the app names itself.
+            // Those never build this package's client, so their key is not this check's business.
+            if (name != Name)
+            {
+                return ValidateOptionsResult.Skip;
+            }
+
+            // Same order as ApiKey.Resolve: a blank environment variable counts as no key, an
+            // explicit empty option does not.
+            var key = options.ApiKey;
             if (key is null)
             {
-                return ValidateOptionsResult.Fail(MissingKey);
+                var fromEnvironment = Environment.GetEnvironmentVariable(ApiKey.EnvironmentVariable);
+                if (fromEnvironment is null || fromEnvironment.Trim().Length == 0)
+                {
+                    return ValidateOptionsResult.Fail(MissingKey);
+                }
+
+                key = fromEnvironment;
             }
 
             try

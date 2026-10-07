@@ -82,6 +82,31 @@ public sealed class ServiceCollectionTests : IDisposable
     }
 
     [Fact]
+    public async Task BlankKeyInEnvironment_FailsAsMissing()
+    {
+        Environment.SetEnvironmentVariable("TYPESAFE_API_KEY", "   ");
+        var builder = Builder();
+        builder.Services.AddTypeSafe(builder.Configuration.GetSection("TypeSafe"));
+        using var host = builder.Build();
+
+        var ex = await Assert.ThrowsAsync<OptionsValidationException>(() => host.StartAsync(Ct));
+
+        Assert.Contains("https://console.typesafe.ai/keys", ex.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void OtherNamedOptions_AreNotKeyChecked()
+    {
+        var builder = Builder();
+        builder.Services.AddTypeSafe(o => o.ApiKey = TestKey);
+        using var host = builder.Build();
+
+        var unnamed = host.Services.GetRequiredService<IOptions<TypeSafeClientOptions>>().Value;
+
+        Assert.Null(unnamed.ApiKey);
+    }
+
+    [Fact]
     public async Task KeyOnlyInEnvironment_Starts()
     {
         Environment.SetEnvironmentVariable("TYPESAFE_API_KEY", TestKey);
