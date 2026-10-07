@@ -117,32 +117,10 @@ character, or a non-ASCII character each throws `TypeSafeConfigurationException`
 empty `ApiKey` does not fall back to the environment. Keep the key in the environment, in user
 secrets or in a vault, never in source ([Security](#security)).
 
-### Pointing at another endpoint
-
-`BaseUrl` is an API root; the client appends `/v1/systemone`. Any gateway that speaks the same
-route works:
-
-| Gateway | Base URL | Model | Key |
-| --- | --- | --- | --- |
-| TypeSafe (default) | `https://api.typesafe.ai` | `jev-latest` | a TypeSafe key |
-| [OpenJEV](https://openjev.sh/docs) | `https://api.openjev.sh` | `openjev` | a key from openjev.sh |
-| `rev serve` (local) | `http://127.0.0.1:8421` | any open checkpoint | any placeholder |
-
-OpenJEV is an independent community gateway to the same Jev model, with the same request and
-response shape. The environment alone selects it:
-
-```bash
-export TYPESAFE_API_KEY=...          # your key from https://openjev.sh/dashboard
-export TYPESAFE_BASE_URL=https://api.openjev.sh
-export TYPESAFE_DEFAULT_MODEL=openjev
-```
-
-OpenJEV's own examples write the key as `OPENJEV_API_KEY`; that name is its convention, not this
-SDK's, so copy the value into `TYPESAFE_API_KEY` or set `ApiKey` in code.
-
-`rev serve` answers the same route from a local, open checkpoint with no key and no network. The
-SDK still requires a key value, so set any placeholder and point the base URL at the local
-server. Plain http is accepted only for loopback addresses.
+Other gateways that speak the same route, such as [OpenJEV](https://openjev.sh/docs) or a local
+`rev serve`, need only a different base URL, model and key. The
+[Configuration](https://github.com/sanamhub/typesafe-dotnet/wiki/Configuration) page has the
+values for each.
 
 ## ASP.NET Core
 
