@@ -9,8 +9,8 @@
 
   <ItemGroup Label="Core">
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.12" />
-    <PackageVersion Include="System.Text.Json" Version="10.0.12" />
-    <PackageVersion Include="System.Diagnostics.DiagnosticSource" Version="10.0.12" />
+    <PackageVersion Include="System.Text.Json" Version="10.0.13" />
+    <PackageVersion Include="System.Diagnostics.DiagnosticSource" Version="10.0.13" />
     <PackageVersion Include="Microsoft.Bcl.TimeProvider" Version="10.0.12" />
     <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.12" />
   </ItemGroup>
